@@ -18,8 +18,8 @@ class Header extends Component {
             this.setState({ mobileMenuOpen: false });
         };
 
-         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
-    
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
+
 
     }
 
@@ -34,7 +34,12 @@ class Header extends Component {
     }
 
     updateWindowDimensions() {
+        const MOBILE_BREAKPOINT = '768'
         this.setState({ width: window.innerWidth, height: window.innerHeight });
+
+        if (window.innerWidth >= MOBILE_BREAKPOINT && this.state.mobileMenuOpen) {
+            this.setState({ mobileMenuOpen: false });
+        }
     }
 
     render() {

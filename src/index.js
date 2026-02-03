@@ -5,13 +5,19 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import reduxThunk from 'redux-thunk';
+import reducers from './components/reducers';
+
+const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <HelmetProvider>
       <React.StrictMode>
-        <App />
+        <Provider store={store}><App /></Provider>
       </React.StrictMode>
     </HelmetProvider>
   </BrowserRouter>

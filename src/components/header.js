@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { geotechLogo, hamburgerIcon } from "./svg";
 import { MyStylesheet } from "./styles";
+import { Link } from 'react-router-dom';
 class Header extends Component {
     constructor(props) {
         super(props)
@@ -64,7 +65,7 @@ class Header extends Component {
                         {/* Right-aligned controls */}
                         <div className="top-controls">
                             <nav className="top-nav">
-                                <a href="#logout">Logout</a>
+                                <Link onClick={() => { this.closeMenu() }} to="/login">Login</Link>
                                 <a href="#profile">Profile</a>
                                 <a href="#clients">Clients</a>
                                 <a href="#projects">Projects</a>
@@ -101,7 +102,7 @@ class Header extends Component {
                         <a href="#projects" onClick={this.closeMenu}>Projects</a>
                         <a href="#clients" onClick={this.closeMenu}>Clients</a>
                         <a href="#profile" onClick={this.closeMenu}>Profile</a>
-                        <a href="#logout" onClick={this.closeMenu}>Logout</a>
+                         <Link onClick={() => { this.closeMenu() }} to="/login">Login</Link>
                     </nav>
                 </aside>
             </>

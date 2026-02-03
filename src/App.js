@@ -1,8 +1,14 @@
 import React, { Component } from "react";
 import './App.css';
+import * as actions from './components/actions';
+import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { MyStylesheet } from "./components/styles";
 import Header from "./components/header";
+import { Route, Switch } from 'react-router-dom';
+import Home from "./components/home";
+import Login from "./components/login";
+import Contact from './components/contact'
 
 
 class App extends Component {
@@ -14,6 +20,7 @@ class App extends Component {
       <div className="App">
 
         <Helmet>
+         
 
         </Helmet>
 
@@ -21,9 +28,11 @@ class App extends Component {
         <main className="main-content">
 
           {/* Page content goes here */}
-          <div style={{ ...styles.generalContainer }}>
-           App
-          </div>
+           <Switch>
+                  <Route exact path="/" component={Home} />
+                  <Route exact path="/login" component={Login} />
+                  <Route exact path="/contact" component={Contact} />
+           </Switch>
         </main>
 
 
@@ -33,4 +42,11 @@ class App extends Component {
   }
 }
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    myuser: state.myuser,
+    projects: state.projects,
+  }
+}
+
+export default connect(mapStateToProps, actions)(App);

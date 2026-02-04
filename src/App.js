@@ -9,6 +9,7 @@ import { Route, Switch } from 'react-router-dom';
 import Home from "./components/home";
 import Login from "./components/login";
 import Contact from './components/contact'
+import Features from './components/features'
 
 
 class App extends Component {
@@ -32,6 +33,7 @@ class App extends Component {
                   <Route exact path="/" component={Home} />
                   <Route exact path="/login" component={Login} />
                   <Route exact path="/contact" component={Contact} />
+                  <Route exact path="/features" component={Features} />
            </Switch>
         </main>
 

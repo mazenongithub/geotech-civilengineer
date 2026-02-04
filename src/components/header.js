@@ -66,9 +66,10 @@ class Header extends Component {
                         <div className="top-controls">
                             <nav className="top-nav">
                                 <Link onClick={() => { this.closeMenu() }} to="/login">Login</Link>
-                                <a href="#profile">Profile</a>
-                                <a href="#clients">Clients</a>
-                                <a href="#projects">Projects</a>
+                                <Link onClick={() => { this.closeMenu() }} to="/contact">Contact</Link>
+                                <Link onClick={() => { this.closeMenu() }} to="/features">Features</Link>
+                                <Link onClick={() => { this.closeMenu() }} to="/">Home</Link>
+
                             </nav>
 
                             {/* Hamburger on FAR RIGHT */}
@@ -99,10 +100,10 @@ class Header extends Component {
                 {/* Right-to-left sliding drawer */}
                 <aside className={`side-drawer ${mobileMenuOpen ? "open" : ""}`}>
                     <nav>
-                        <a href="#projects" onClick={this.closeMenu}>Projects</a>
-                        <a href="#clients" onClick={this.closeMenu}>Clients</a>
-                        <a href="#profile" onClick={this.closeMenu}>Profile</a>
-                         <Link onClick={() => { this.closeMenu() }} to="/login">Login</Link>
+                        <Link onClick={() => { this.closeMenu() }} to="/">Home</Link>
+                        <Link onClick={() => { this.closeMenu() }} to="/features">Features</Link>
+                        <Link onClick={() => { this.closeMenu() }} to="/contact">Contact</Link>
+                        <Link onClick={() => { this.closeMenu() }} to="/login">Login</Link>
                     </nav>
                 </aside>
             </>

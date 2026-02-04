@@ -59,7 +59,7 @@ class Header extends Component {
 
         return (
             <>
-                <header className="app-header">
+                <header className="app-header" style={{...styles.bottomMargin15}}>
                     {/* Top Bar */}
                     <div className="top-bar">
                         {/* Right-aligned controls */}

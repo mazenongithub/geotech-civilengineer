@@ -182,6 +182,15 @@ export function MyStylesheet() {
         padding15: {
             padding: '15px'
         },
+        paddingTop15: {
+            paddingTop: '15px'
+        },
+         paddingLeft15: {
+            paddingLeft: '15px'
+        },
+         paddingRight15: {
+            paddingRight: '15px'
+        },
         generalPadding: {
             padding: '5px'
         },

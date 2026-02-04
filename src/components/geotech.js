@@ -14,18 +14,18 @@ class Geotech {
     getRegularFont() {
 
         if (this.state.width > 800) {
-            return ({ fontSize: '30px' })
+            return ({ fontSize: '20px' })
         } else {
-            return ({ fontSize: '24px' })
+            return ({ fontSize: '18px' })
         }
 
     }
     getHeaderFont() {
 
         if (this.state.width > 800) {
-            return ({ fontSize: '40px' })
+            return ({ fontSize: '24px' })
         } else {
-            return ({ fontSize: '30px' })
+            return ({ fontSize: '20px' })
         }
 
     }

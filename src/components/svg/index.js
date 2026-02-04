@@ -73,3 +73,13 @@ export function hamburgerIcon() {
   </g>
 </svg>)
 }
+
+export function triangleBullet() {
+  return(
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36.04 28.26">
+ 
+  <g id="svg">
+    <polygon className="bullet-1" points="18.02 27.33 35.13 .5 .91 .5 18.02 27.33"/>
+  </g>
+</svg>)
+}

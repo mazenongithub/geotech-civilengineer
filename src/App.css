@@ -131,7 +131,8 @@ body {
   padding: 1rem 1.5rem;
   color: #eee9e1;
   text-decoration: none;
-  border-bottom: 1px solid #eee9e1;;
+  border-bottom: 1px solid #eee9e1;
+  ;
 }
 
 .side-drawer a:hover {
@@ -149,6 +150,14 @@ body {
 .geotechlogo-3 {
   fill: #bfbebe;
 }
+
+.bullet-1 {
+  fill: #c0a87b;
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+}
+
+
 
 /* Responsive */
 @media (max-width: 768px) {

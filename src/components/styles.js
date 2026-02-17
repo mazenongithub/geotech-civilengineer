@@ -59,6 +59,9 @@ export function MyStylesheet() {
         alignRight: {
             float: 'right'
         },
+        alignRight: {
+            float: 'right'
+        },
         flex1: {
             flex: 1,
         },

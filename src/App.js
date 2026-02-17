@@ -3,7 +3,6 @@ import './App.css';
 import * as actions from './components/actions';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
-import { MyStylesheet } from "./components/styles";
 import Header from "./components/header";
 import { Route, Switch } from 'react-router-dom';
 import Home from "./components/home";
@@ -16,7 +15,7 @@ class App extends Component {
 
   
   render() {
-    const styles = MyStylesheet();
+
     return (
       <div className="App">
 

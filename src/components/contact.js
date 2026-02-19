@@ -8,13 +8,15 @@ import moment from "moment";
 import { SaveContactUs } from './actions/api';
 
 class Contact extends Component {
-    turnstileRendered = false;
+
 
     constructor(props) {
         super(props)
         this.state = {
             width: 0, height: 0, datein: new Date(), fullname: '', company: '', emailaddress: '', phonenumber: '', projectaddress: '', projectcity: '', message: '', projectinquiry: false, residential: false, commercial: false, mixeduse: false, publicagency: false, investigation: false, planreview: false, compactiontesting: false, foundationdesign: false, pavementdesign: false, specialinspection: false, retainingwall: false, foundationinspection: false, preferredContact: 'email', captchaToken: false
         };
+
+        this.turnstileRendered = false;
 
 
 
@@ -411,18 +413,25 @@ class Contact extends Component {
                 projectaddress,
                 projectcity,
                 projectinquiry,
-                residential,
-                commercial,
-                mixeduse,
-                publicagency,
-                investigation,
-                planreview,
-                compactiontesting,
-                foundationdesign,
-                pavementdesign,
-                specialinspection,
-                retainingwall,
-                foundationinspection,
+                clienttype: {
+                    residential,
+                    commercial,
+                    mixeduse,
+                    publicagency,
+
+                },
+                services: {
+                    investigation,
+                    planreview,
+                    compactiontesting,
+                    foundationdesign,
+                    pavementdesign,
+                    specialinspection,
+                    retainingwall,
+                    foundationinspection
+
+                },
+
                 preferredContact,
                 message,
                 captchaToken
@@ -430,12 +439,13 @@ class Contact extends Component {
 
             console.log(values)
 
-            // const response = await SaveContactUs(values);
-            // const created = new Date(response.contactus.created).toLocaleTimeString();
-            // const messagecreated = `${response.message} ${created}`
-            // this.setState({
-            //     message: messagecreated || 'Message sent successfully'
-            // });
+            const response = await SaveContactUs(values);
+            console.log(response)
+            const created = new Date(response.created).toLocaleTimeString();
+            const messagecreated = `${response.message} ${created}`
+            this.setState({
+                messagecreated: messagecreated || 'Message sent successfully'
+            });
 
         } catch (err) {
             console.error('save contact us error:', err);
@@ -537,20 +547,25 @@ class Contact extends Component {
                     </div>
                 </div>
 
+                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15, ...styles.alignCenter }}>
+                    <span style={{ ...regularFont }}>{this.state.messagecreated}  </span>
+                </div>
+
+
 
                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
                     <span style={{ ...regularFont }}>Have a question or starting a project? Send us a message and we’ll follow </span>
                 </div>
 
-                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
                     <span style={{ ...regularFont }}>Contact Form (primary) </span>
                 </div>
 
-                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
                     <a href={`mailTo:mazen@civilengineer.io`} style={{ ...regularFont, ...styles.boldFont, ...styles.generalLink }}>Email: mazen@civilengineer.io </a>
                 </div>
 
-                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
                     <span style={{ ...regularFont }}>Phone Number: Phone consultations available upon request.  </span>
                 </div>
 

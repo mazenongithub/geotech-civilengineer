@@ -36,11 +36,13 @@ export async function SaveContactUs(values) {
             },
             body: JSON.stringify(values),
         });
+        
 
         if (!response.ok) {
             const data = await response.json().catch(() => ({}));
+           
             const message =
-                data.message || 'Request failed or server is not responding';
+                data.error || 'Request failed or server is not responding';
             throw new Error(message);
         }
 

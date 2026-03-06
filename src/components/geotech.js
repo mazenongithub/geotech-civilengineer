@@ -1,14 +1,8 @@
 class Geotech {
 
-     getUser() {
-        const user = this.props.myuser;
-
-        // Must exist AND have a valid _id
-        if (user && user._id) {
-            return user;
-        }
-
-        return false;
+    getUser() {
+        const { myuser } = this.props;
+        return myuser?._id ? myuser : null;
     }
 
     getRegularFont() {

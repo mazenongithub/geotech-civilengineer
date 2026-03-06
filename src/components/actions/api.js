@@ -1,27 +1,55 @@
+export async function LogoutUser(clientid) {
+    if (!clientid) {
+        throw new Error("Missing client ID for logout.");
+    }
+
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/${clientid}/logout`;
+
+    const resp = await fetch(APIURL, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+
+    let data = {};
+    try {
+        data = await resp.json();
+    } catch (_) {
+        // ignore parsing errors for empty responses
+    }
+
+    if (!resp.ok) {
+        throw new Error(data.message || "Logout failed");
+    }
+
+    return data;
+}
+
 export async function LoginUser(values) {
     const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/login`;
 
+    const resp = await fetch(APIURL, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+    });
+
+    let data = {};
     try {
-        const resp = await fetch(APIURL, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(values),
-        });
-
-        // Handle client errors (400–499)
-        if (!resp.ok) {
-            const errorData = await resp.json().catch(() => ({}));
-            const message = errorData.message || `Request failed with status ${resp.status}`;
-            throw new Error(message);
-        }
-
-        return await resp.json();
-    } catch (err) {
-        throw err;
+        data = await resp.json();
+    } catch (_) {
+        // ignore parsing errors if response is empty
     }
+
+    if (!resp.ok) {
+        const message = data.message || `Request failed with status ${resp.status}`;
+        throw new Error(message);
+    }
+
+    return data;
 }
 
 export async function SaveContactUs(values) {
@@ -36,11 +64,11 @@ export async function SaveContactUs(values) {
             },
             body: JSON.stringify(values),
         });
-        
+
 
         if (!response.ok) {
             const data = await response.json().catch(() => ({}));
-           
+
             const message =
                 data.error || 'Request failed or server is not responding';
             throw new Error(message);
@@ -52,3 +80,33 @@ export async function SaveContactUs(values) {
         throw err instanceof Error ? err : new Error(String(err));
     }
 }
+
+export async function CheckUser() {
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/checkuser`;
+
+    const resp = await fetch(APIURL, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    let data = {};
+    try {
+        data = await resp.json();
+    } catch (_) {
+        // ignore JSON parsing errors if response is empty
+    }
+
+    if (!resp.ok) {
+        const message =
+            resp.status >= 500
+                ? "Please try again later. Server error."
+                : data.message || `Request failed with status ${resp.status}`;
+        throw new Error(message);
+    }
+
+    return data;
+}
+

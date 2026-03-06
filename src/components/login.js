@@ -13,7 +13,7 @@ import { MyStylesheet } from "./styles";
 class Login extends Component {
     constructor(props) {
         super(props)
-        this.state = { email: '', setEmail: "", password: "", setPassword: "", firstname: "", lastname: "", emailaddress: "", profileurl: "", phonenumber: "", apple: "" }
+        this.state = { email: '', setEmail: "", password: "", setPassword: "", firstname: "", lastname: "", emailaddress: "", profileurl: "", phonenumber: "", apple: "", clientid: 'maison', google: '' }
     }
 
     async handleAppleLogin() {
@@ -52,11 +52,12 @@ class Login extends Component {
                 phonenumber = user.phoneNumber;
             }
 
-            this.setState({ firstname, lastname, emailaddress, profileurl, phonenumber, apple })
-
-
-
-            this.clientLogin()
+            this.setState(
+                { firstname, lastname, emailaddress, profileurl, phonenumber, apple },
+                () => {
+                    this.clientLogin(); // runs AFTER state updates
+                }
+            );
 
         } catch (err) {
             alert(err)
@@ -83,21 +84,26 @@ class Login extends Component {
 
 
             const result = await signInWithPopup(auth, googleProvider);
-
+            console.log(result)
             if (result.hasOwnProperty("user")) {
 
                 user = result.user;
                 google = user.providerData[0].uid;
+
                 firstname = user.providerData[0].displayName.split(' ')[0]
                 lastname = user.providerData[0].displayName.split(' ')[1]
                 emailaddress = user.providerData[0].email
                 profileurl = user.providerData[0].photoURL
                 phonenumber = user.phoneNumber;
+                console.log(firstname, lastname, emailaddress, profileurl, phonenumber, google)
             }
 
-            this.setState({ firstname, lastname, emailaddress, profileurl, phonenumber, google })
-
-            this.clientLogin()
+            this.setState(
+                { firstname, lastname, emailaddress, profileurl, phonenumber, google },
+                () => {
+                    this.clientLogin(); // runs AFTER state updates
+                }
+            );
 
 
         } catch (error) {
@@ -108,45 +114,28 @@ class Login extends Component {
     }
 
     async clientLogin() {
-        const {
-            firstname,
-            lastname,
-            emailaddress,
-            profileurl,
-            phonenumber,
-            apple,
-            google
-        } = this.state;
+        const { firstname, lastname, emailaddress, profileurl, phonenumber, apple, google, clientid } = this.state;
 
-        const values = {
-            firstname,
-            lastname,
-            emailaddress,
-            profileurl,
-            phonenumber,
-            apple,
-            google
-        };
+        const values = { firstname, lastname, emailaddress, profileurl, phonenumber, apple, google, clientid };
+        console.log("Logging in with values:", values);
 
         try {
             const response = await LoginUser(values);
 
-            if (response.engineer) {
-                this.props.reduxUser(response.engineer);
-
+            // 1️⃣ Update Redux with user and projects
+            if (response.client) {
+                this.props.reduxUser(response.client); // was 'response.engineer'? Changed to 'client'
             }
 
             if (response.projects) {
-                this.props.reduxProjects(response.projects)
+                this.props.reduxProjects(response.projects);
             }
 
-            if (response?.geotech) {
-                this.props.reduxCompany(response.geotech)
-            }
+            // 2️⃣ No need for setState hack; Redux should trigger re-render
 
-            this.setState({ render: 'render' });
         } catch (err) {
             console.error("Login error:", err);
+            alert(`Login Error: ${err.message || err}`);
         }
     }
 
@@ -203,12 +192,12 @@ class Login extends Component {
 
 
     render() {
-     
+
         const geotech = new Geotech();
         const user = geotech.getUser.call(this)
         if (user) {
 
-            return (<Profile/>)
+            return (<Profile />)
 
         } else {
 

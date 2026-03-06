@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import { geotechLogo, hamburgerIcon } from "./svg";
 import { MyStylesheet } from "./styles";
 import { Link } from 'react-router-dom';
+import Geotech from "./geotech";
+import * as actions from './actions';
+import { connect } from 'react-redux';
+import { LogoutUser } from "./actions/api";
 class Header extends Component {
     constructor(props) {
         super(props)
@@ -43,6 +47,55 @@ class Header extends Component {
         }
     }
 
+    getProfileLink() {
+        const geotech = new Geotech();
+        const myuser = geotech.getUser.call(this)
+        if (myuser) {
+            return (<Link onClick={() => { this.closeMenu() }} to={`/profile/${myuser.clientid}`}>
+                Profile
+            </Link>)
+
+        }
+    }
+
+    getMyProjectsLink() {
+        const geotech = new Geotech();
+        const myuser = geotech.getUser.call(this)
+        if (myuser) {
+            return (<Link onClick={() => { this.closeMenu() }} to={`/myprojects/${myuser.clientid}`}>
+                MyProjects
+            </Link>)
+
+        }
+    }
+
+    async logoutUser(clientid) {
+        try {
+            const response = await LogoutUser(clientid);
+
+            if (response?.message) {
+                this.props.reduxUser(null);
+            }
+
+        } catch (err) {
+            alert(`Could not logout user: ${err.message}`);
+        }
+    }
+
+    getLoginLink() {
+        const geotech = new Geotech();
+
+        const myuser = geotech.getUser.call(this)
+
+        return myuser ? (
+            <a onClick={() => { this.logoutUser(myuser.clientid) }}>Logout</a>
+        ) : (
+            <Link onClick={() => { this.closeMenu() }} to="/login">
+                Login
+            </Link>
+        );
+    }
+
     render() {
         const { mobileMenuOpen } = this.state;
         const logoWidth = () => {
@@ -59,13 +112,15 @@ class Header extends Component {
 
         return (
             <>
-                <header className="app-header" style={{...styles.bottomMargin15}}>
+                <header className="app-header" style={{ ...styles.bottomMargin15 }}>
                     {/* Top Bar */}
                     <div className="top-bar">
                         {/* Right-aligned controls */}
                         <div className="top-controls">
                             <nav className="top-nav">
-                                <Link onClick={() => { this.closeMenu() }} to="/login">Login</Link>
+                                {this.getLoginLink()}
+                                {this.getMyProjectsLink()}
+                                {this.getProfileLink()}
                                 <Link onClick={() => { this.closeMenu() }} to="/contact">Contact</Link>
                                 <Link onClick={() => { this.closeMenu() }} to="/features">Features</Link>
                                 <Link onClick={() => { this.closeMenu() }} to="/">Home</Link>
@@ -103,7 +158,9 @@ class Header extends Component {
                         <Link onClick={() => { this.closeMenu() }} to="/">Home</Link>
                         <Link onClick={() => { this.closeMenu() }} to="/features">Features</Link>
                         <Link onClick={() => { this.closeMenu() }} to="/contact">Contact</Link>
-                        <Link onClick={() => { this.closeMenu() }} to="/login">Login</Link>
+                        {this.getMyProjectsLink()}
+                        {this.getProfileLink()}
+                        {this.getLoginLink()}
                     </nav>
                 </aside>
             </>
@@ -111,4 +168,11 @@ class Header extends Component {
     }
 }
 
-export default Header;
+function mapStateToProps(state) {
+    return {
+        myuser: state.myuser,
+        projects: state.projects,
+    }
+}
+
+export default connect(mapStateToProps, actions)(Header);

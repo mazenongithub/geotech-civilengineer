@@ -48,14 +48,13 @@ class Profile extends Component {
 
     getPrefix(prefix) {
         const geotech = new Geotech();
-        const user = geotech.getUser.call(this)
-        if (user.prefix === prefix) {
-            return (radioCheck())
-        } else {
-            return (radioUncheck())
-        }
-    }
+        const user = geotech.getUser.call(this);
 
+        // Return unchecked if user is not loaded yet
+        if (!user) return radioUncheck();
+
+        return user.prefix === prefix ? radioCheck() : radioUncheck();
+    }
     profile_1() {
         const styles = MyStylesheet();
         const geotech = new Geotech();

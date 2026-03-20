@@ -62,8 +62,8 @@ class Header extends Component {
         const geotech = new Geotech();
         const myuser = geotech.getUser.call(this)
         if (myuser) {
-            return (<Link onClick={() => { this.closeMenu() }} to={`/myprojects/${myuser.clientid}`}>
-                MyProjects
+            return (<Link onClick={() => { this.closeMenu() }} to={`/projects/${myuser.clientid}`}>
+                Projects
             </Link>)
 
         }

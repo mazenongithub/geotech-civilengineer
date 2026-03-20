@@ -9,11 +9,12 @@ import { signInWithPopup } from "firebase/auth"
 import Profile from "./profile";
 import Geotech from './geotech'
 import { MyStylesheet } from "./styles";
+import Register from "./register";
 
 class Login extends Component {
     constructor(props) {
         super(props)
-        this.state = { email: '', setEmail: "", password: "", setPassword: "", firstname: "", lastname: "", emailaddress: "", profileurl: "", phonenumber: "", apple: "", clientid: 'maison', google: '' }
+        this.state = { email: '', setEmail: "", password: "", setPassword: "", firstname: "", lastname: "", emailaddress: "", profileurl: "", phonenumber: "", apple: "", clientid: '', google: '', register: false }
     }
 
     async handleAppleLogin() {
@@ -143,6 +144,7 @@ class Login extends Component {
         const styles = MyStylesheet();
         const geotech = new Geotech();
         const regularFont = geotech.getRegularFont.call(this)
+        const register = new Register();
 
         return (
 
@@ -150,6 +152,8 @@ class Login extends Component {
                 <div className="login-box">
 
                     <h2>Login</h2>
+
+                    {register.showRegister.call(this)}
 
                     {/* Apple Login */}
                     <button className="login-btn apple" onClick={() => { this.handleAppleLogin() }}>

@@ -79,7 +79,7 @@ class App extends Component {
             <Route exact path="/contact" component={Contact} />
             <Route exact path="/features" component={Features} />
             <Route exact path="/profile/:clientid" component={Profile} />
-            <Route exact path="/myprojects/:clientid" component={MyProjects} />
+            <Route exact path="/projects/:clientid" component={MyProjects} />
           </Switch>
         </main>
 

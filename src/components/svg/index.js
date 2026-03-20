@@ -123,3 +123,70 @@ export function rightArrow() {
   </g>
 </svg>)
 }
+
+export function saveProfileIcon() {
+  return(<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288.03 79.38">
+  <g id="svg">
+    <rect className="saveprofile-4" x=".5" y=".5" width="287.03" height="78.38" rx="14.22" ry="14.22"/>
+    <text className="saveprofile-1" transform="translate(10.5 49.09) scale(1.44 1)"><tspan className="saveprofile-7" x="0" y="0">S</tspan><tspan className="saveprofile-3" x="21.32" y="0">a</tspan><tspan className="saveprofile-5" x="39.38" y="0">v</tspan><tspan className="saveprofile-7" x="58.47" y="0">e P</tspan><tspan className="saveprofile-6" x="104.09" y="0">r</tspan><tspan className="saveprofile-7" x="115.75" y="0">o</tspan><tspan className="saveprofile-2" x="135.6" y="0">f</tspan><tspan className="saveprofile-7" x="148.32" y="0">ile</tspan></text>
+  </g>
+</svg>)
+}
+
+export function defaultProfilePhoto() {
+    return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 274 267"><defs>
+      <style></style></defs>
+      <title>defaultphoto</title>
+      <g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="defaultphoto-1" x="0.5" y="0.5" width="273" height="266" /><path className="defaultphoto-2" d="M255.81,176.48v70a20,20,0,0,1-20,20H46.8a20,20,0,0,1-20-20v-70a20,20,0,0,1,20-20H107a73.15,73.15,0,0,1-19.67-14.33A68,68,0,0,1,67.62,94.5c0-38.66,32.91-70,73.5-70s73.5,31.34,73.5,70a68,68,0,0,1-19.31,47.3,73.44,73.44,0,0,1-20,14.7h60.56A20,20,0,0,1,255.81,176.48Z" /></g></g></svg>)
+}
+
+export function uploadIcon() {
+  return(<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88.37 78.99">
+
+  <g id="svg">
+    <rect className="uploadIcon-1" x=".5" y=".5" width="87.37" height="77.99"/>
+    <g>
+      <rect className="uploadIcon-2" x="36.37" y="36.28" width="15.64" height="37.21"/>
+      <polygon className="uploadIcon-2" points="44.19 5.5 23.24 40.59 65.14 40.59 44.19 5.5"/>
+    </g>
+  </g>
+</svg>)
+}
+
+export function radioUncheck() {
+
+  return(<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35.52 35.52">
+  <defs>
+    <style>
+   
+    </style>
+  </defs>
+  <g id="svg">
+    <rect className="radiouncheck-1" x=".5" y=".5" width="34.52" height="34.52"/>
+  </g>
+</svg>)
+
+}
+
+export function radioCheck() {
+  return(<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35.52 35.52">
+  <defs>
+    <style>
+   
+    </style>
+  </defs>
+  <g id="svg">
+    <rect className="radioCheck-1" x=".5" y=".5" width="34.52" height="34.52"/>
+  </g>
+</svg>)
+}
+
+export function redCheckBox() {
+  return(<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56.97 47.92">
+
+  <g id="png">
+    <rect className="redcheckbox-1" x=".5" y=".5" width="55.97" height="46.92"/>
+    <polygon className="redcheckbox-2" points="43.39 32.75 38.86 37.28 28.48 26.9 18.11 37.27 13.58 32.74 23.95 22.37 13.58 12 18.11 7.46 28.48 17.84 38.86 7.46 43.39 11.99 33.01 22.37 43.39 32.75"/>
+  </g>
+</svg>)
+}

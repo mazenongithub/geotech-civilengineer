@@ -82,14 +82,7 @@ class Home extends Component {
                 <span style={{...regularFont}}>All your geotechnical data—from soil tests to foundation inspections—is stored securely and accessible anytime.</span>
             </div>
 
-            <div style={{...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont}}>
-                <div style={{...styles.flex2, ...styles.positionRight}}>
-                    <span style={{...headerFont}}>Get Started and Register</span>
-                </div>
-                 <div style={{...styles.flex1, ...styles.marginLeft15}}>
-                    <button style={{...styles.generalButton, ...buttonWidth}}>{rightArrow()}</button>
-                </div>
-            </div>
+           
 
              <div style={{...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont}}>
                 <div style={{...styles.flex2, ...styles.positionRight}}>

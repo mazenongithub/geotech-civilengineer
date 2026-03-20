@@ -192,7 +192,93 @@ body {
   stroke-miterlimit: 10;
 }
 
+.saveprofile-1 {
+  fill: #fff;
+  font-family: 'Inter Variable', sans-serif;
+  font-size: 36px;
+  font-variation-settings: 'opsz' 14, 'wght' 800;
+  font-weight: 700;
+}
 
+.saveprofile-2 {
+  letter-spacing: -.06em;
+}
+
+.saveprofile-3 {
+  letter-spacing: -.09em;
+}
+
+.saveprofile-4 {
+  fill: #6485c3;
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+}
+
+.saveprofile-5 {
+  letter-spacing: -.09em;
+}
+
+.saveprofile-6 {
+  letter-spacing: -.1em;
+}
+
+.saveprofile-7 {
+  letter-spacing: -.07em;
+}
+
+.uploadIcon-1 {
+  fill: #79a6d8;
+}
+
+.uploadIcon-1,
+.uploadIcon-2 {
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+}
+
+.uploadIcon-2 {
+  fill: #6485c3;
+}
+
+.radiouncheck-1 {
+  fill: none;
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+}
+
+.radioCheck-1 {
+  fill: #79a6d8;
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+}
+
+.defaultphoto-1 {
+  fill: #999898;
+}
+
+.defaultphoto-1,
+.defaultphoto-2 {
+  stroke: #000;
+  stroke-miterlimit: 10;
+}
+
+.defaultphoto-2 {
+  fill: #fff;
+}
+
+.redcheckbox-1 {
+  fill: none;
+}
+
+.redcheckbox-1,
+.redcheckbox-2 {
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+}
+
+.redcheckbox-2 {
+  fill: #ed1c24;
+}
 
 /* Responsive */
 @media (max-width: 768px) {

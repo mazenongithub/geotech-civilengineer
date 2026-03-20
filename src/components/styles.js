@@ -59,9 +59,6 @@ export function MyStylesheet() {
         alignRight: {
             float: 'right'
         },
-        alignRight: {
-            float: 'right'
-        },
         flex1: {
             flex: 1,
         },
@@ -103,6 +100,7 @@ export function MyStylesheet() {
           width50: {
             width: '50%'
         },
+
          width90: {
             width: '80%'
         },

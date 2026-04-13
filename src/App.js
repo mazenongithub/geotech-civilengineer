@@ -11,6 +11,7 @@ import Features from './components/features'
 import { CheckUser } from "./components/actions/api";
 import Profile from "./components/profile";
 import MyProjects from "./components/myprojects";
+import ViewProject from './components/viewproject'
 
 
 class App extends Component {
@@ -80,6 +81,7 @@ class App extends Component {
             <Route exact path="/features" component={Features} />
             <Route exact path="/profile/:clientid" component={Profile} />
             <Route exact path="/projects/:clientid" component={MyProjects} />
+            <Route path="/projects/:clientid/:projectid" component={ViewProject} />
           </Switch>
         </main>
 

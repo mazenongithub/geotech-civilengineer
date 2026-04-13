@@ -190,3 +190,46 @@ export function redCheckBox() {
   </g>
 </svg>)
 }
+
+export function deleteIcon() {
+  return(<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31.23 31.24">
+ 
+  <g id="png">
+    <polygon className="deleteIcon-1" points="30.53 26 25.99 30.53 15.61 20.15 5.24 30.53 .71 25.99 11.08 15.62 .71 5.25 5.24 .71 15.61 11.09 25.99 .71 30.53 5.24 20.15 15.62 30.53 26"/>
+  </g>
+</svg>)
+}
+
+export function activeIcon() {
+  return(<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 49.85 49.85">
+
+  <g id="png">
+    <rect className="activeIcon-1" x=".5" y=".5" width="48.85" height="48.85"/>
+  </g>
+</svg>)
+}
+
+export function gotoIcon() {
+  return(<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93.74 52.82">
+ 
+  <g id="svg">
+    <path className="gotoicon-1" d="M1,18.34v27.72l16.98,3.24c2.61.6,5.6,1.18,8.95,1.62,5.59.75,10.6.93,14.69.88h15.83c.68-.2,1.39-.48,2.07-.88,3.1-1.85,2.83-4.72,2.75-5.31l-1.15-2.21-14.92-.15,19.05-.29c.72-.48,1.53-1.16,2.07-2.06,1.83-3.09-1.17-6.07-1.61-6.49h-15.6,20.42c1.15-.57,1.74-1.18,2.07-1.62,1.46-1.98.41-4.62-2.52-6.78h-15.6,35.34c1.32-.63,1.96-1.31,2.29-1.77,1.47-2.04.35-4.76-2.75-6.93h-51.17l14.69-8.55c.43-.53.8-1.17.92-1.92.51-3.15-3.81-5.46-4.36-5.75L1,18.34Z"/>
+  </g>
+</svg>)
+}
+
+export function saveProjectsIcon() {
+  return(<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 277.75 78.06">
+  <defs>
+    <style>
+      
+    </style>
+  </defs>
+  <g id="png">
+    <g>
+      <rect className="saveproject-5" x=".94" y=".5" width="275.87" height="67.9" rx="10.65" ry="10.65"/>
+      <text className="saveproject-4" transform="translate(13.31 46.07) scale(1.2 1)"><tspan className="saveproject-6" x="0" y="0">S</tspan><tspan className="saveproject-1" x="20.66" y="0">a</tspan><tspan className="saveproject-3" x="39.25" y="0">v</tspan><tspan className="saveproject-6" x="55.74" y="0">e P</tspan><tspan className="saveproject-2" x="104.31" y="0">r</tspan><tspan className="saveproject-6" x="115.44" y="0">ojects</tspan></text>
+    </g>
+  </g>
+</svg>)
+}

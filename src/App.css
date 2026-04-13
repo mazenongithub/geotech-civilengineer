@@ -280,6 +280,55 @@ body {
   fill: #ed1c24;
 }
 
+.deleteIcon-1 {
+  fill: #eb2127;
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+}
+
+.activeIcon-1 {
+  fill: #f2b1b6;
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+}
+
+
+.gotoicon-1 {
+  fill: #e7d9b0;
+  stroke: #010101;
+  stroke-miterlimit: 10;
+  stroke-width: 2px;
+}
+
+.saveproject-1 {
+        letter-spacing: -.03em;
+      }
+
+      .saveproject-2 {
+        letter-spacing: -.03em;
+      }
+
+      .saveproject-3 {
+        letter-spacing: -.03em;
+      }
+
+      .saveproject-4 {
+        fill: #fff;
+        font-family: Roboto-Regular, Roboto;
+        font-size: 36px;
+        font-variation-settings: 'wght' 400, 'wdth' 100;
+      }
+
+      .saveproject-5 {
+        fill: #9e1c33;
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+      }
+
+      .saveproject-6 {
+        letter-spacing: -.02em;
+      }
+
 /* Responsive */
 @media (max-width: 768px) {
   .top-nav {

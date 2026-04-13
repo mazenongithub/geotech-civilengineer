@@ -270,6 +270,9 @@ export function MyStylesheet() {
             maxWidth: '120px',
             border: '1px solid'
         },
+        bottomMargin30: {
+            marginBottom: '30px',
+        },
 
         bottomMargin15: {
             marginBottom: '15px',

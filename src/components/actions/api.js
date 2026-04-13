@@ -110,6 +110,64 @@ export async function CheckUser() {
     return data;
 }
 
+export async function SaveProject(projectid, values) {
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/gfk/saveproject/${projectid}`;
+
+    try {
+        const response = await fetch(APIURL, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(values),
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            throw new Error(
+                data?.error || 'Request failed or server is not responding'
+            );
+        }
+
+        return data;
+
+    } catch (err) {
+        console.error("SaveProject error:", err);
+        throw err instanceof Error ? err : new Error(String(err));
+    }
+}
+
+export async function SaveProjects(clientid, values) {
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/gfk/saveprojects/${clientid}`;
+
+    try {
+        const response = await fetch(APIURL, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(values),
+        });
+
+
+        if (!response.ok) {
+            const data = await response.json().catch(() => ({}));
+
+            const message =
+                data.error || 'Request failed or server is not responding';
+            throw new Error(message);
+        }
+
+        return await response.json();
+
+    } catch (err) {
+        throw err instanceof Error ? err : new Error(String(err));
+    }
+}
+
 export async function SaveProfile(user) {
     const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/saveprofile`;
 
@@ -120,7 +178,7 @@ export async function SaveProfile(user) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({myuser:user}),
+            body: JSON.stringify({ myuser: user }),
         });
 
 
@@ -140,26 +198,26 @@ export async function SaveProfile(user) {
 }
 
 export async function UploadProfilePhoto(formData) {
-  const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/uploadprofilephoto`;
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/uploadprofilephoto`;
 
-  try {
-    const resp = await fetch(APIURL, {
-      method: "POST",
-      credentials: "include",
-      body: formData
-    });
+    try {
+        const resp = await fetch(APIURL, {
+            method: "POST",
+            credentials: "include",
+            body: formData
+        });
 
-    const data = await resp.json().catch(() => null);
+        const data = await resp.json().catch(() => null);
 
-    if (!resp.ok) {
-      throw new Error(
-        data?.message || "Please try again later, server is not responding"
-      );
+        if (!resp.ok) {
+            throw new Error(
+                data?.message || "Please try again later, server is not responding"
+            );
+        }
+
+        return data;
+
+    } catch (err) {
+        return Promise.reject(err.message || "Unexpected error occurred");
     }
-
-    return data;
-
-  } catch (err) {
-    return Promise.reject(err.message || "Unexpected error occurred");
-  }
 }

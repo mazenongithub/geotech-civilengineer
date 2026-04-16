@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { MyStylesheet } from './styles'
 import Geotech from './geotech';
 import { Link } from 'react-router-dom';
-import { SaveProject } from './actions/api';
+import { SaveProject, LoadProject } from './actions/api';
 import { Route, Switch } from 'react-router-dom';
 import { saveProjectsIcon } from "./svg";
 
@@ -24,8 +24,9 @@ class ViewProject extends Component {
 
         // If projects are already loaded (e.g., navigated from Projects page)
         if (projects && projects.length > 0) {
-            console.log("loadproject data")
+            await this.loadProjectData();
         }
+
 
     }
     async componentDidUpdate(prevProps) {
@@ -45,7 +46,7 @@ class ViewProject extends Component {
         // Run when projects just became available
         if (prevProjects.length === 0 && currentProjects.length > 0 && !this.state.project) {
             console.log("✅ Detected projects loaded — calling loadProjectData()");
-
+            await this.loadProjectData();
         }
 
 
@@ -58,6 +59,51 @@ class ViewProject extends Component {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
+
+    async loadProjectData() {
+        const { match, projects, reduxProjects } = this.props;
+        const projectid = match.params.projectid;
+
+        try {
+            const result = await LoadProject(projectid);
+            console.log(result)
+            if (!result) return;
+
+            // Normalize projects list in case it’s wrapped in an object
+            const allProjects = Array.isArray(projects)
+                ? [...projects]
+                : projects?.projects
+                    ? [...projects.projects]
+                    : [];
+
+            // Find the project to update
+            const index = allProjects.findIndex(p => p.projectid === projectid);
+            if (index === -1) {
+                console.warn(`⚠️ Project ${projectid} not found in store`);
+                return;
+            }
+
+            // Attach borings (already sorted)
+            allProjects[index] = {
+                ...allProjects[index],
+                borings: result.borings
+            };
+
+            // Update Redux store or local state
+            if (reduxProjects) {
+                reduxProjects(allProjects);
+            }
+
+            this.setState({
+                project: allProjects[index],
+                render: 'render',
+            });
+
+        } catch (err) {
+            console.error("❌ Error loading project:", err);
+        }
+    }
+
 
     getProjectValue(prop) {
         const geotech = new Geotech();

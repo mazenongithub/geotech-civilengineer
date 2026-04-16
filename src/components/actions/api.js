@@ -110,6 +110,62 @@ export async function CheckUser() {
     return data;
 }
 
+
+
+
+
+
+export async function LoadProjects() {
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/gfk/loadprojects`;
+
+    try {
+        const resp = await fetch(APIURL, { credentials: 'include' });
+
+        if (!resp.ok) {
+            // Try to extract server error message if available
+            const errorData = await resp.json().catch(() => ({}));
+            const message =
+                errorData?.message ||
+                (resp.status >= 400 && resp.status < 500
+                    ? 'Client error while loading projects.'
+                    : 'Please try again later, server is not responding.');
+            throw new Error(message);
+        }
+
+        return await resp.json();
+    } catch (err) {
+        console.error('❌ Error loading projects:', err);
+        throw err;
+    }
+}
+
+
+
+
+export async function LoadProject(projectid) {
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/${projectid}/loadproject`;
+
+    try {
+        const resp = await fetch(APIURL, { credentials: 'include' });
+
+        if (!resp.ok) {
+            // Try to extract server error message if available
+            const errorData = await resp.json().catch(() => ({}));
+            const message =
+                errorData?.message ||
+                (resp.status >= 400 && resp.status < 500
+                    ? 'Client error while loading project.'
+                    : 'Please try again later, server is not responding.');
+            throw new Error(message);
+        }
+
+        return await resp.json();
+    } catch (err) {
+        console.error('❌ Error loading project:', err);
+        throw err;
+    }
+}
+
 export async function SaveProject(projectid, values) {
     const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/gfk/saveproject/${projectid}`;
 

@@ -1,4 +1,5 @@
 import { SaveProjects } from "./actions/api";
+import { geotechLogo } from "./svg";
 class Geotech {
 
     getUser() {
@@ -7,29 +8,57 @@ class Geotech {
     }
 
     getProjects() {
-        const { projects } = this.props;
-        return Array.isArray(projects) ? projects : null;
+        let { projects } = this.props;
+
+        if (projects && !Array.isArray(projects)) {
+            projects = projects.projects;
+        }
+
+        return Array.isArray(projects) ? projects : [];
     }
 
     getProjectByID(projectId) {
+        const geotech = new Geotech();
+        return geotech.getProjects.call(this).find(
+            p => p.projectid === projectId
+        ) || null;
+    }
+
+
+
+    getProjectKeyByID(projectId) {
         const { projects } = this.props;
         if (!projects) return null;
 
-        return projects.find(project => project.projectid === projectId) || null;
+        const index = projects.findIndex(
+            project => project.projectid === projectId
+        );
+
+        return index === -1 ? null : index;
     }
 
-   
+    getBorings(projectid) {
+        const geotech = new Geotech();
+        const project = geotech.getProjectByID.call(this, projectid);
 
-    getProjectKeyByID(projectId) {
-    const { projects } = this.props;
-    if (!projects) return null;
+        return project?.borings ?? [];
+    }
 
-    const index = projects.findIndex(
-        project => project.projectid === projectId
-    );
+    getBoringById(projectid, boringid) {
+        const geotech = new Geotech();
+        const borings = geotech.getBorings.call(this, projectid) ?? [];
 
-    return index === -1 ? null : index;
+        return borings.find(b => b.boringid === boringid) || null;
+    }
+
+   getSamplesByBoringId(projectid, boringid) {
+    const geotech = new Geotech();
+    const boring = geotech.getBoringById.call(this, projectid, boringid);
+
+    return boring?.samples ?? [];
 }
+
+
 
 
     getRegularFont() {

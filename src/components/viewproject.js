@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { SaveProject, LoadProject } from './actions/api';
 import { Route, Switch } from 'react-router-dom';
 import { saveProjectsIcon } from "./svg";
+import Borings from './borings';
+import ViewBoring from './viewboring'
 
 class ViewProject extends Component {
 
@@ -86,8 +88,13 @@ class ViewProject extends Component {
             // Attach borings (already sorted)
             allProjects[index] = {
                 ...allProjects[index],
-                borings: result.borings
-            };
+                borings: result.borings,
+                fieldreports: result.fieldreports,
+                compactioncurves: result.compactioncurves,
+                seismic:result.seismic,
+                ptslab:result.ptslab,
+                slope:result.slope,
+                timesheet:result.timesheet };
 
             // Update Redux store or local state
             if (reduxProjects) {
@@ -181,11 +188,12 @@ class ViewProject extends Component {
 
         const geotech = new Geotech();
         const user = geotech.getUser.call(this)
+        const path = this.props.match.path;
         const headerFont = geotech.getHeaderFont.call(this)
         const regularFont = geotech.getRegularFont.call(this)
         const saveIconWidth = this.state.width > 768 ? { width: '200px' } : { width: '150px' }
         if (user) {
-            const { projectid } = this.props.match.params;
+            const { projectid, clientid } = this.props.match.params;
             const project = geotech.getProjectByID.call(this, projectid)
 
             if (project) {
@@ -294,6 +302,19 @@ class ViewProject extends Component {
                         <span style={{ ...regularFont }}>{this.state.message}</span>
                     </div>
 
+                    <div style={{...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15}}>
+                        <span style={{...headerFont}}>Project Components</span>
+                    </div>
+
+                    <div style={{...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15}}>
+                        <div style={{...styles.flex1, ...styles.alignCenter}}>
+                            <Link style={{...styles.generalLink, ...headerFont}} to={`/projects/${clientid}/${projectid}/borings`}>/Soil Borings Logs</Link>
+                        </div>
+                        <div style={{...styles.flex1}}>
+                            <Link style={{...styles.generalLink, ...headerFont}} to={`/projects/${clientid}/${projectid}/geotechnicalreport`}>/Geotechnical Report</Link>
+                        </div>
+                    </div>
+
 
                 </div>
 
@@ -311,10 +332,19 @@ class ViewProject extends Component {
         const styles = MyStylesheet();
         const { match } = this.props;
         const path = match.path;
+        const projectid = this.props.match.params.projectid;
+        const user = geotech.getUser.call(this)
+        const project = geotech.getProjectByID.call(this, projectid);
 
+   
+    if (!user || !project) {
+        return <div style={styles.generalContainer}>Loading...</div>;
+    }
         return (<div style={{ ...styles.generalContainer }}>
             <Switch>
                 <Route exact path={path} render={() => this.showViewProject()} />
+                <Route exact path={`${path}/borings`} component={Borings} />
+                <Route exact path={`${path}/borings/:boringid`} component={ViewBoring} />
             </Switch>
         </div>)
 

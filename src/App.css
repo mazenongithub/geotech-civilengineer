@@ -301,33 +301,63 @@ body {
 }
 
 .saveproject-1 {
-        letter-spacing: -.03em;
-      }
+  letter-spacing: -.03em;
+}
 
-      .saveproject-2 {
-        letter-spacing: -.03em;
-      }
+.saveproject-2 {
+  letter-spacing: -.03em;
+}
 
-      .saveproject-3 {
-        letter-spacing: -.03em;
-      }
+.saveproject-3 {
+  letter-spacing: -.03em;
+}
 
-      .saveproject-4 {
-        fill: #fff;
-        font-family: Roboto-Regular, Roboto;
-        font-size: 36px;
-        font-variation-settings: 'wght' 400, 'wdth' 100;
-      }
+.saveproject-4 {
+  fill: #fff;
+  font-family: Roboto-Regular, Roboto;
+  font-size: 36px;
+  font-variation-settings: 'wght' 400, 'wdth' 100;
+}
 
-      .saveproject-5 {
-        fill: #9e1c33;
-        stroke: #231f20;
-        stroke-miterlimit: 10;
-      }
+.saveproject-5 {
+  fill: #9e1c33;
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+}
 
-      .saveproject-6 {
-        letter-spacing: -.02em;
-      }
+.saveproject-6 {
+  letter-spacing: -.02em;
+}
+
+.downloadIcon-1 {
+  fill: #fff;
+}
+
+.downloadIcon-1,
+.downloadIcon-2,
+.downloadIcon-3 {
+  stroke-miterlimit: 10;
+}
+
+.downloadIcon-1,
+.downloadIcon-3 {
+  stroke: #000;
+}
+
+.downloadIcon-2 {
+  fill: #f2f2f3;
+  font-family: Roboto-Bold, Roboto;
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -.06em;
+  stroke: #231f20;
+}
+
+.downloadIcon-3 {
+  fill: #428bca;
+  stroke-width: 3px;
+}
+
 
 /* Responsive */
 @media (max-width: 768px) {

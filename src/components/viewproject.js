@@ -9,7 +9,9 @@ import { Route, Switch } from 'react-router-dom';
 import { saveProjectsIcon } from "./svg";
 import Borings from './borings';
 import ViewBoring from './viewboring'
-
+import LabSummary from './labsummary'
+import FieldReports from './fieldreports'
+import ViewFieldReport from './viewfieldreport'
 class ViewProject extends Component {
 
     constructor(props) {
@@ -91,10 +93,11 @@ class ViewProject extends Component {
                 borings: result.borings,
                 fieldreports: result.fieldreports,
                 compactioncurves: result.compactioncurves,
-                seismic:result.seismic,
-                ptslab:result.ptslab,
-                slope:result.slope,
-                timesheet:result.timesheet };
+                seismic: result.seismic,
+                ptslab: result.ptslab,
+                slope: result.slope,
+                timesheet: result.timesheet
+            };
 
             // Update Redux store or local state
             if (reduxProjects) {
@@ -302,16 +305,35 @@ class ViewProject extends Component {
                         <span style={{ ...regularFont }}>{this.state.message}</span>
                     </div>
 
-                    <div style={{...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15}}>
-                        <span style={{...headerFont}}>Project Components</span>
+                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                        <span style={{ ...headerFont }}>Project Components</span>
                     </div>
 
-                    <div style={{...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15}}>
-                        <div style={{...styles.flex1, ...styles.alignCenter}}>
-                            <Link style={{...styles.generalLink, ...headerFont}} to={`/projects/${clientid}/${projectid}/borings`}>/Soil Borings Logs</Link>
+                    <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/borings`}>/Soil Borings Logs</Link>
                         </div>
-                        <div style={{...styles.flex1}}>
-                            <Link style={{...styles.generalLink, ...headerFont}} to={`/projects/${clientid}/${projectid}/geotechnicalreport`}>/Geotechnical Report</Link>
+                        <div style={{ ...styles.flex1 }}>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/geotechnical`}>/Geotechnical Report</Link>
+                        </div>
+                    </div>
+
+
+                    <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/technical`}>/Technical Reports</Link>
+                        </div>
+                        <div style={{ ...styles.flex1 }}>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/labsummary`}>/Lab Summary</Link>
+                        </div>
+                    </div>
+
+                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/maps`}>/Geologic Maps</Link>
+                        </div>
+                        <div style={{ ...styles.flex1 }}>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/fieldreports`}>/Field Reports</Link>
                         </div>
                     </div>
 
@@ -336,15 +358,19 @@ class ViewProject extends Component {
         const user = geotech.getUser.call(this)
         const project = geotech.getProjectByID.call(this, projectid);
 
-   
-    if (!user || !project) {
-        return <div style={styles.generalContainer}>Loading...</div>;
-    }
+
+        if (!user || !project) {
+            return <div style={styles.generalContainer}>Loading...</div>;
+        }
         return (<div style={{ ...styles.generalContainer }}>
             <Switch>
                 <Route exact path={path} render={() => this.showViewProject()} />
                 <Route exact path={`${path}/borings`} component={Borings} />
+                <Route exact path={`${path}/labsummary`} component={LabSummary} />
+                <Route exact path={`${path}/fieldreports`} component={FieldReports} />
                 <Route exact path={`${path}/borings/:boringid`} component={ViewBoring} />
+                <Route exact path={`${path}/fieldreports/:fieldid`} component={ViewFieldReport} />
+
             </Switch>
         </div>)
 

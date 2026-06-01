@@ -1,3 +1,11 @@
+export function formatTime(date) {
+    if (!date) return "";
+    // Ensure it's a Date object
+    const d = date instanceof Date ? date : new Date(date);
+    // Returns time like "4:30 PM"
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
+
 export function formatDate(date) {
     if (!date) return "";
     const d = date instanceof Date ? date : new Date(date);
@@ -8,6 +16,39 @@ export function formatDate(date) {
         day: "2-digit",
     });
 };
+
+export function calculateLaborCost(timeIn, timeOut, laborRate) {
+  const start = new Date(timeIn);
+  const end = new Date(timeOut);
+
+  const diffMs = end - start;                        // difference in milliseconds
+  const hours = diffMs / (1000 * 60 * 60);           // convert to hours
+  const roundedHours = Math.round(hours * 100) / 100; // round to hundredth
+
+  const totalCost = Math.round(roundedHours * laborRate * 100) / 100;
+
+  return totalCost;
+}
+
+export function calculateHours(timeIn, timeOut) {
+  const start = new Date(timeIn);
+  const end = new Date(timeOut);
+
+  const diffMs = end - start;                        // difference in ms
+  const hours = diffMs / (1000 * 60 * 60);           // convert to hours
+
+  return Math.round(hours * 100) / 100;              // round to hundredth
+}
+
+export function calculateCost(quantity, unitCost) {
+  const qty = Number(quantity);
+  const cost = Number(unitCost);
+
+  if (isNaN(qty) || isNaN(cost)) return 0;
+
+  // round to hundredth
+  return Math.round(qty * cost * 100) / 100;
+}
 
 export function milestoneformatdatestring(dateIn) {
     if (!dateIn) return "";

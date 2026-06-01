@@ -251,3 +251,17 @@ export function saveProjectsIcon() {
   </g>
 </svg>)
 }
+
+export function payNow() {
+  return(<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288.02 84.13">
+  <defs>
+    <style>
+     
+    </style>
+  </defs>
+  <g id="png">
+    <rect className="paynow-1" x="0" width="288.02" height="84.13" rx="13.84" ry="13.84"/>
+    <text className="paynow-2" transform="translate(41.95 47.28) scale(1.86 1)"><tspan className="paynow-3" x="0" y="0">P</tspan><tspan className="paynow-4" x="14.05" y="0">A</tspan><tspan className="paynow-5" x="29.38" y="0">Y NOW</tspan></text>
+  </g>
+</svg>)
+}

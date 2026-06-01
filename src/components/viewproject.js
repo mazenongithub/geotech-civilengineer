@@ -12,6 +12,8 @@ import ViewBoring from './viewboring'
 import LabSummary from './labsummary'
 import FieldReports from './fieldreports'
 import ViewFieldReport from './viewfieldreport'
+import Invoices from './invoices'
+import ViewInvoice from './viewinvoice'
 class ViewProject extends Component {
 
     constructor(props) {
@@ -337,6 +339,15 @@ class ViewProject extends Component {
                         </div>
                     </div>
 
+                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/invoices`}>/Invoices</Link>
+                        </div>
+                        <div style={{ ...styles.flex1 }}>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/costs`}>/Cost Tracking</Link>
+                        </div>
+                    </div>
+
 
                 </div>
 
@@ -370,6 +381,8 @@ class ViewProject extends Component {
                 <Route exact path={`${path}/fieldreports`} component={FieldReports} />
                 <Route exact path={`${path}/borings/:boringid`} component={ViewBoring} />
                 <Route exact path={`${path}/fieldreports/:fieldid`} component={ViewFieldReport} />
+                <Route exact path={`${path}/invoices`} component={Invoices} />
+                <Route exact path={`${path}/invoices/:invoiceid`} component={ViewInvoice} />
 
             </Switch>
         </div>)

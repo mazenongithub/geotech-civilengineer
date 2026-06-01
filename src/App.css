@@ -359,6 +359,31 @@ body {
 }
 
 
+ .paynow-1 {
+        fill: #75a7c8;
+      }
+
+      .paynow-2 {
+        fill: #deeffb;
+        font-family: Roboto-CondensedSemiBold, Roboto;
+        font-size: 30px;
+        font-variation-settings: 'wght' 600, 'wdth' 75;
+        font-weight: 600;
+      }
+
+      .paynow-3 {
+        letter-spacing: -.1em;
+      }
+
+      .paynow-4 {
+        letter-spacing: -.08em;
+      }
+
+      .paynow-5 {
+        letter-spacing: -.01em;
+      }
+
+
 /* Responsive */
 @media (max-width: 768px) {
   .top-nav {

@@ -44,14 +44,64 @@ class Geotech {
         return project?.borings ?? [];
     }
 
-     getFieldReports(projectid) {
+    getInvoices(projectid) {
+        const geotech = new Geotech();
+        const project = geotech.getProjectByID.call(this, projectid);
+        if (project.timesheet) {
+            return project.timesheet?.invoices ?? [];
+
+        }
+    }
+
+    getInvoiceByID(projectid, invoiceid) {
+        const geotech = new Geotech();
+        const invoices = geotech.getInvoices.call(this, projectid) ?? [];
+
+        return invoices.find(invoice => invoice.invoiceid === invoiceid) || null;
+    }
+
+    getInvoiceLineItems(projectid, invoiceid) {
+        const geotech = new Geotech();
+
+        const project = geotech.getProjectByID.call(this, projectid);
+        const invoice = geotech.getInvoiceByID.call(this, projectid, invoiceid);
+
+        if (!project || !invoice) return [];
+
+        const labor = project?.timesheet?.labor ?? [];
+        const costs = project?.timesheet?.costs ?? [];
+
+        // 🔥 Match invoice labor IDs
+        const laborItems = labor
+            .filter(item => invoice.labor?.includes(item.laborid))
+            .map(item => ({
+                ...item,
+                type: 'labor',
+                sortdate: new Date(item.timein)
+            }));
+
+        // 🔥 Match invoice cost IDs
+        const costItems = costs
+            .filter(item => invoice.costs?.includes(item.costid))
+            .map(item => ({
+                ...item,
+                type: 'cost',
+                sortdate: new Date(item.datein)
+            }));
+
+        // 🔥 Combine + sort reverse chronological
+        return [...laborItems, ...costItems]
+            .sort((a, b) => b.sortdate - a.sortdate);
+    }
+
+    getFieldReports(projectid) {
         const geotech = new Geotech();
         const project = geotech.getProjectByID.call(this, projectid);
 
         return project?.fieldreports ?? [];
     }
 
-     getimagesbyfieldid(projectid, fieldid) {
+    getimagesbyfieldid(projectid, fieldid) {
         const geotech = new Geotech();
         const fieldreport = geotech.getFieldReportById.call(this, projectid, fieldid);
         if (!fieldreport || !Array.isArray(fieldreport.images)) return false;
@@ -59,7 +109,7 @@ class Geotech {
         return fieldreport.images;
     }
 
-      getcurves(projectid) {
+    getcurves(projectid) {
         const geotech = new Geotech();
         const project = geotech.getProjectByID.call(this, projectid);
 
@@ -69,14 +119,14 @@ class Geotech {
     }
 
 
-      getcurvebyid(projectid, curveid) {
+    getcurvebyid(projectid, curveid) {
         const geotech = new Geotech();
         const curves = geotech.getcurves.call(this, projectid);
 
         return curves?.find(curve => curve.curveid === curveid) || false;
     }
 
-      getcompactiontestsbyfieldid(projectid, fieldid) {
+    getcompactiontestsbyfieldid(projectid, fieldid) {
 
         const geotech = new Geotech();
         const fieldreport = geotech.getFieldReportById.call(this, projectid, fieldid)
@@ -156,7 +206,7 @@ class Geotech {
         return compactiontests;
     }
 
-     getFieldReportById(projectid, fieldid) {
+    getFieldReportById(projectid, fieldid) {
         const geotech = new Geotech();
         const fieldreports = geotech.getFieldReports.call(this, projectid) ?? [];
 
@@ -171,14 +221,14 @@ class Geotech {
         return borings.find(b => b.boringid === boringid) || null;
     }
 
-   getSamplesByBoringId(projectid, boringid) {
-    const geotech = new Geotech();
-    const boring = geotech.getBoringById.call(this, projectid, boringid);
+    getSamplesByBoringId(projectid, boringid) {
+        const geotech = new Geotech();
+        const boring = geotech.getBoringById.call(this, projectid, boringid);
 
-    return boring?.samples ?? [];
-}
+        return boring?.samples ?? [];
+    }
 
-   getSampleById(projectId, boringId, sampleId) {
+    getSampleById(projectId, boringId, sampleId) {
         const geotech = new Geotech();
         const boring = geotech.getBoringById.call(this, projectId, boringId);
 
@@ -187,14 +237,14 @@ class Geotech {
         return boring.samples.find(s => s.sampleid === sampleId) || false;
     }
 
-     getUnconfinedTestById(projectId, boringId, sampleId) {
+    getUnconfinedTestById(projectId, boringId, sampleId) {
         const geotech = new Geotech();
         const sample = geotech.getSampleById.call(this, projectId, boringId, sampleId);
 
         return sample?.unconfined || false;
     }
 
-       getSieveBySampleId(projectId, boringId, sampleId) {
+    getSieveBySampleId(projectId, boringId, sampleId) {
         const geotech = new Geotech();
         const sample = geotech.getSampleById.call(this, projectId, boringId, sampleId);
 

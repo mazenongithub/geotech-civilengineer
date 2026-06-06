@@ -268,7 +268,10 @@ export async function SaveProfile(user) {
             const data = await response.json().catch(() => ({}));
 
             const message =
-                data.error || 'Request failed or server is not responding';
+                data.error ||
+                (Array.isArray(data.errors) ? data.errors.join("\n") : null) ||
+                'Request failed or server is not responding';
+
             throw new Error(message);
         }
 

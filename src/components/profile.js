@@ -251,10 +251,53 @@ class Profile extends Component {
         }
     }
 
+    validateProfile(myuser) {
+      
+        const errors = [];
+
+        // Client ID (Instagram-style username)
+        const clientId = myuser.clientid?.trim().toLowerCase();
+
+        if (!clientId) {
+            errors.push("Client ID is required.");
+        } else if (!/^[a-z0-9._]{3,30}$/.test(clientId)) {
+            errors.push(
+                "Client ID must be 3-30 characters and contain only lowercase letters, numbers, periods, and underscores."
+            );
+        }
+
+        // Email
+        const email = myuser.emailaddress?.trim();
+
+        if (!email) {
+            errors.push("Email address is required.");
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            errors.push("Please enter a valid email address.");
+        }
+
+        // Phone
+        const phone = myuser.phonenumber?.trim();
+
+        if (!phone) {
+            errors.push("Phone number is required.");
+        } else if (!/^\d{3}-\d{3}-\d{4}$/.test(phone)) {
+            errors.push("Phone number must be in the format xxx-xxx-xxxx.");
+        }
+
+        return errors;
+    }
+
     async saveProfile() {
         try {
             const geotech = new Geotech();
             const user = geotech.getUser.call(this)
+
+           const errors =  this.validateProfile(user)
+
+            if (errors.length) {
+                alert(errors.join("\n"));
+                return;
+            }
 
             let response = await SaveProfile(user)
             if (response.myuser) {
@@ -267,7 +310,7 @@ class Profile extends Component {
 
         } catch (err) {
 
-            alert(`Could not save Profile ${err}`)
+            alert(`Could not save Profile ${err.message}`)
         }
 
     }

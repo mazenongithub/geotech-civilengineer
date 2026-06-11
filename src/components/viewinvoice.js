@@ -3,22 +3,71 @@ import * as actions from './actions';
 import { connect } from 'react-redux';
 import { MyStylesheet } from './styles'
 import Geotech from './geotech';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { formatDate, formatTime, calculateHours, calculateCost, calculateLaborCost } from './functions'
 import { gotoIcon, payNow } from './svg';
+import { loadStripe } from "@stripe/stripe-js";
+
+import {
+    Elements,
+    PaymentElement,
+    useStripe,
+    useElements,
+} from "@stripe/react-stripe-js";
+import { CreatePaymentIntent } from './actions/api';
+
+const stripePromise = loadStripe(
+    process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY
+);
+
+function CheckoutForm(props) {
+    const stripe = useStripe();
+    const elements = useElements();
+
+    const {clientid, invoiceid, projectid } = props;
+    console.log(`${window.location.origin}/projects/${clientid}/${projectid}/invoices/${invoiceid}/payments`)
+   
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const { error } = await stripe.confirmPayment({
+            elements,
+            confirmParams: {
+                return_url: `${window.location.origin}/projects/${clientid}/${projectid}/invoices/${invoiceid}/payments`
+            }
+        }
+        )
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <PaymentElement />
+            <button type="submit">
+                Pay Invoice
+            </button>
+        </form>
+    );
+}
 
 
 class ViewInvoice extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, message: '' }
+        this.state = {
+            render: '', width: 0, height: 0, message: '',
+            clientSecret: null,
+            loading: true,
+        };
+
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
 
     async componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+        this.createPaymentIntent();
 
     }
 
@@ -87,7 +136,7 @@ class ViewInvoice extends Component {
                 </div>
             </div>)
         } else {
-           return( <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
+            return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
                     <span style={{ ...regularFont }}>
                         {formatDate(labor.timein)}
@@ -128,7 +177,7 @@ class ViewInvoice extends Component {
         const regularFont = geotech.getRegularFont.call(this)
         const iconWidth = { width: '54px' }
 
-            if (this.state.width > 768) {
+        if (this.state.width > 768) {
 
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }}>
 
@@ -141,7 +190,7 @@ class ViewInvoice extends Component {
                 <div style={{ ...styles.flex3 }}>
 
                     <span style={{ ...regularFont }}>
-                       {cost.description}
+                        {cost.description}
                     </span>
 
                 </div>
@@ -154,17 +203,17 @@ class ViewInvoice extends Component {
                 </div>
             </div>)
         } else {
-           return( <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
+            return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
                     <span style={{ ...regularFont }}>
-                       {formatDate(cost.datein)}
+                        {formatDate(cost.datein)}
                     </span>
 
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
                     <span style={{ ...regularFont }}>
-                       {cost.description}
+                        {cost.description}
                     </span>
 
                 </div>
@@ -220,6 +269,52 @@ class ViewInvoice extends Component {
         return Number(total.toFixed(2));
     }
 
+    async createPaymentIntent() {
+        try {
+            const { invoiceid, projectid } = this.props.match.params;
+
+            const data = await CreatePaymentIntent(projectid, invoiceid)
+
+            this.setState({
+                clientSecret: data.clientSecret,
+                loading: false,
+            });
+        } catch (err) {
+            console.error(err);
+
+            this.setState({
+                loading: false,
+            });
+        }
+    };
+
+
+
+    showPayment() {
+        
+        const { clientSecret, loading } = this.state;
+        const {clientid, projectid, invoiceid} = this.props.match.params;
+
+        if (loading) {
+            return <div>Loading payment form...</div>;
+        }
+
+        if (!clientSecret) {
+            return <div>Unable to load payment form.</div>;
+        }
+
+        return (
+            <Elements
+                stripe={stripePromise}
+                options={{
+                    clientSecret,
+                }}
+            >
+                <CheckoutForm clientid={clientid}  projectid={projectid} invoiceid={invoiceid} />
+            </Elements>
+        );
+    }
+
 
 
 
@@ -271,6 +366,7 @@ class ViewInvoice extends Component {
         };
 
         const buttonWidth = { width: '180px' }
+       
 
         return (
             <div style={{ ...styles.generalContainer, ...styles.marginLeft15 }}>
@@ -278,7 +374,7 @@ class ViewInvoice extends Component {
                 <div style={rowStyle}>
                     <Link
                         style={linkStyle}
-                        to={`/projects/${user.clientid}`}
+                        to={`/ projects / ${user.clientid}`}
                     >
                         /Projects
                     </Link>
@@ -287,7 +383,7 @@ class ViewInvoice extends Component {
                 <div style={rowStyle}>
                     <Link
                         style={linkStyle}
-                        to={`/projects/${user.clientid}/${project.projectid}`}
+                        to={`/ projects / ${user.clientid} / ${project.projectid}`}
                     >
                         /{project.title}
                     </Link>
@@ -296,7 +392,7 @@ class ViewInvoice extends Component {
                 <div style={rowStyle}>
                     <Link
                         style={linkStyle}
-                        to={`/projects/${user.clientid}/${project.projectid}/invoices`}
+                        to={`/ projects / ${user.clientid} / ${project.projectid} / invoices`}
                     >
                         /Invoices
                     </Link>
@@ -305,7 +401,7 @@ class ViewInvoice extends Component {
                 <div style={rowStyle}>
                     <Link
                         style={linkStyle}
-                        to={`/projects/${user.clientid}/${project.projectid}/invoices/${invoiceid}`}
+                        to={`/ projects / ${user.clientid} / ${project.projectid} / invoices / ${invoiceid}`}
                     >
                         /{formatDate(invoice.dateinvoice)}
                     </Link>
@@ -322,7 +418,7 @@ class ViewInvoice extends Component {
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...buttonWidth }}>{payNow()}</button>
+                    {this.showPayment()}
                 </div>
 
             </div>

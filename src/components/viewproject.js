@@ -14,6 +14,7 @@ import FieldReports from './fieldreports'
 import ViewFieldReport from './viewfieldreport'
 import Invoices from './invoices'
 import ViewInvoice from './viewinvoice'
+import Payments from './payments'
 class ViewProject extends Component {
 
     constructor(props) {
@@ -383,6 +384,7 @@ class ViewProject extends Component {
                 <Route exact path={`${path}/fieldreports/:fieldid`} component={ViewFieldReport} />
                 <Route exact path={`${path}/invoices`} component={Invoices} />
                 <Route exact path={`${path}/invoices/:invoiceid`} component={ViewInvoice} />
+                <Route exact path={`${path}/invoices/:invoiceid/payments`} component={Payments} />
 
             </Switch>
         </div>)

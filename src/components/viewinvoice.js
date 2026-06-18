@@ -23,10 +23,12 @@ const stripePromise = loadStripe(
 function CheckoutForm(props) {
     const stripe = useStripe();
     const elements = useElements();
+    const styles = MyStylesheet();
+    const buttonWidth = { width: '250px' }
 
-    const {clientid, invoiceid, projectid } = props;
-    console.log(`${window.location.origin}/projects/${clientid}/${projectid}/invoices/${invoiceid}/payments`)
-   
+    const { clientid, invoiceid, projectid } = props;
+
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -43,9 +45,12 @@ function CheckoutForm(props) {
     return (
         <form onSubmit={handleSubmit}>
             <PaymentElement />
-            <button type="submit">
-                Pay Invoice
-            </button>
+            <div style={{ ...styles.generalContainer }}>
+                <button className="payment-button"
+                    style={{ ...styles.generalButton, ...styles.marginAuto }} type="submit">
+                    {payNow()}
+                </button>
+            </div>
         </form>
     );
 }
@@ -67,8 +72,38 @@ class ViewInvoice extends Component {
     async componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.createPaymentIntent();
+        //  this.createPaymentIntent();
 
+    }
+
+    componentDidUpdate(prevProps) {
+
+        const { projectid, invoiceid } =
+            this.props.match.params;
+
+        const geotech = new Geotech();
+
+        const project =
+            geotech.getProjectByID.call(
+                this,
+                projectid
+            );
+
+        const invoice =
+            geotech.getInvoiceByID.call(
+                this,
+                projectid,
+                invoiceid
+            );
+
+        if (
+            project &&
+            invoice &&
+            !this.state.clientSecret &&
+            this.state.loading
+        ) {
+            this.createPaymentIntent();
+        }
     }
 
 
@@ -270,6 +305,16 @@ class ViewInvoice extends Component {
     }
 
     async createPaymentIntent() {
+        const balance = this.getInvoiceTotal();
+      
+
+        if (balance <= 0) {
+            this.setState({
+                loading: false,
+            });
+            return;
+        }
+
         try {
             const { invoiceid, projectid } = this.props.match.params;
 
@@ -291,12 +336,19 @@ class ViewInvoice extends Component {
 
 
     showPayment() {
-        
+
         const { clientSecret, loading } = this.state;
-        const {clientid, projectid, invoiceid} = this.props.match.params;
+        const { clientid, projectid, invoiceid } = this.props.match.params;
+
+        const balance = this.getInvoiceTotal();
 
         if (loading) {
             return <div>Loading payment form...</div>;
+        }
+
+        // Invoice already paid
+        if (balance <= 0) {
+            return null;
         }
 
         if (!clientSecret) {
@@ -310,8 +362,35 @@ class ViewInvoice extends Component {
                     clientSecret,
                 }}
             >
-                <CheckoutForm clientid={clientid}  projectid={projectid} invoiceid={invoiceid} />
+                <CheckoutForm clientid={clientid} projectid={projectid} invoiceid={invoiceid} />
             </Elements>
+        );
+    }
+
+    showTotal() {
+        const styles = MyStylesheet();
+        const geotech = new Geotech();
+        const regularFont = geotech.getRegularFont.call(this);
+
+        const total = this.getInvoiceTotal();
+
+        if (total <= 0) {
+            return null;
+        }
+
+        return (
+            <div
+                style={{
+                    ...styles.generalContainer,
+                    ...styles.bottomMargin15,
+                    ...styles.generalFont
+                }}
+            >
+                <span style={regularFont}>
+                    Please submit payment for the total amount of: $
+                    {total.toFixed(2)}
+                </span>
+            </div>
         );
     }
 
@@ -366,7 +445,7 @@ class ViewInvoice extends Component {
         };
 
         const buttonWidth = { width: '180px' }
-       
+
 
         return (
             <div style={{ ...styles.generalContainer, ...styles.marginLeft15 }}>
@@ -413,9 +492,7 @@ class ViewInvoice extends Component {
 
                 {this.showLineItems()}
 
-                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
-                    <span style={{ ...regularFont }}>Please submit payment for the total amount of: ${this.getInvoiceTotal()}</span>
-                </div>
+                {this.showTotal()}
 
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
                     {this.showPayment()}

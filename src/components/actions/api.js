@@ -36,26 +36,30 @@ export async function CreatePaymentIntent(projectid, invoiceId) {
     const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/${projectid}/payments/${invoiceId}/create-payment-intent`;
 
     try {
+
         const response = await fetch(APIURL, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                invoiceId,
-            }),
+            method: "GET",
+            credentials: "include"
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Unable to create payment intent.");
+            throw new Error(
+                data.message ||
+                "Unable to retrieve payment status."
+            );
         }
 
         return data;
+
     } catch (error) {
-        console.error("CreatePaymentIntent Error:", error);
+
+        console.error(
+            "GetPaymentStatus Error:",
+            error
+        );
+
         throw error;
     }
 }

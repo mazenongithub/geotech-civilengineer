@@ -5,14 +5,14 @@ import { MyStylesheet } from './styles'
 import Geotech from './geotech';
 import { Link } from 'react-router-dom';
 import { formatDate } from './functions'
-import {GetPaymentStatus} from './actions/api'
+import { GetPaymentStatus } from './actions/api'
 
 class Payments extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      render: '', width: 0, height: 0, message: '', status:null, success:null, amount:null
+      render: '', width: 0, height: 0, message: '', status: null, success: null, amount: null
     }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
   }
@@ -48,7 +48,8 @@ class Payments extends Component {
           paymentIntentId
         );
 
-      this.setState({status:payment.status, success:payment.success, amount:payment.amount})
+
+      this.setState({ status: payment.status, success: payment.success, amount: payment.amount, nextAction: payment.nextAction })
 
     } catch (error) {
 
@@ -60,27 +61,52 @@ class Payments extends Component {
     }
   }
 
-   showMessage() {
-     const styles = MyStylesheet();
-     const geotech = new Geotech();
-     const regularFont = geotech.getRegularFont.call(this)
-     const amount = () => {
-      return((Number(this.state.amount)/100).toFixed(2))
-     }
-     
-
-     if(this.state.status === 'succeeded') {
-
-      return(
-      
-      <div style={{...styles.generalContainer, ...styles.bottomMargin10, ...styles.generalFont, ...styles.alignCenter}}>
-
-        <span style={{...regularFont}}>Your payment for the amount of ${amount()} has been approved and applied to the balance of the invoice. </span>
-      </div>)
-     }
-    
-      
+  showMessage() {
+    const styles = MyStylesheet();
+    const geotech = new Geotech();
+    const regularFont = geotech.getRegularFont.call(this)
+    const amount = () => {
+      return ((Number(this.state.amount) / 100).toFixed(2))
     }
+
+
+    if (this.state.status === 'succeeded') {
+
+      return (
+
+        <div style={{ ...styles.generalContainer, ...styles.bottomMargin10, ...styles.generalFont, ...styles.alignCenter }}>
+
+          <span style={{ ...regularFont }}>Your payment for the amount of ${amount()} has been approved and applied to the balance of the invoice. </span>
+        </div>)
+    } else if (
+      this.state.status === "requires_action" &&
+      this.state.nextAction?.type === "verify_with_microdeposits"
+    ) {
+      return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin10, ...styles.generalFont, ...styles.alignCenter }}>
+
+        <span style={{ ...regularFont }}>Your bank account must be verified using microdeposits. </span>
+      </div>)
+
+    } else if (this.state.status === "processing") {
+
+      return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin10, ...styles.generalFont, ...styles.alignCenter }}>
+
+        <span style={{ ...regularFont }}>Payment Received
+          Thank you. Your payment has been submitted and is awaiting bank processing.</span>
+      </div>)
+
+    } else {
+
+
+      return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin10, ...styles.generalFont, ...styles.alignCenter }}>
+
+        <span style={{ ...regularFont }}>Sorry your payment did not process. </span>
+      </div>)
+
+    }
+
+
+  }
 
 
   render() {
@@ -129,7 +155,7 @@ class Payments extends Component {
     };
 
 
-   
+
 
     return (
       <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
@@ -180,6 +206,12 @@ class Payments extends Component {
             /Payments
           </Link>
         </div>
+
+
+        <div style={{ ...styles.generalContainer, ...styles.bottomMargin10, ...styles.generalFont, ...styles.alignCenter }}>
+
+        <span style={{ ...regularFont }}>{this.state.message} </span>
+      </div>
 
         {this.showMessage()}
 

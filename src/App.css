@@ -359,33 +359,44 @@ body {
 }
 
 
- .paynow-1 {
-        fill: #75a7c8;
-      }
+.paynow-1 {
+  letter-spacing: -.06em;
+}
 
-      .paynow-2 {
-        fill: #deeffb;
-        font-family: Roboto-CondensedSemiBold, Roboto;
-        font-size: 30px;
-        font-variation-settings: 'wght' 600, 'wdth' 75;
-        font-weight: 600;
-      }
+.paynow-2 {
+  fill: #75a7c8;
+}
 
-      .paynow-3 {
-        letter-spacing: -.1em;
-      }
+.paynow-3 {
+  fill: #deeffb;
+  font-family: "Roboto Condensed", sans-serif;
+  font-size: 30px;
+  font-variation-settings: 'wght' 600, 'wdth' 75;
+  font-weight: 600;
+}
 
-      .paynow-4 {
-        letter-spacing: -.08em;
-      }
+.paynow-4 {
+  letter-spacing: 0em;
+}
 
-      .paynow-5 {
-        letter-spacing: -.01em;
-      }
+.paynow-5 {
+  letter-spacing: -.07em;
+}
+
+.payment-button {
+  width: 200px;
+}
+
+
 
 
 /* Responsive */
 @media (max-width: 768px) {
+
+  .payment-button {
+    width: 150px;
+  }
+
   .top-nav {
     display: none;
   }

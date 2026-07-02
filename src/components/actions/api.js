@@ -258,6 +258,33 @@ export async function LoadProject(projectid) {
     }
 }
 
+export async function UpdateProposal(projectid, proposalid, updateProposal) {
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/${projectid}/approveproposal/${proposalid}`;
+
+    try {
+        const response = await fetch(APIURL, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updateProposal),
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            throw new Error(data?.message || 'Request failed or server is not responding');
+        }
+
+        return data;
+
+    } catch (err) {
+        console.error("UpdateProposal error:", err);
+        throw err instanceof Error ? err : new Error(String(err));
+    }
+}
+
 export async function SaveProject(projectid, values) {
     const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/gfk/saveproject/${projectid}`;
 

@@ -15,6 +15,8 @@ import ViewFieldReport from './viewfieldreport'
 import Invoices from './invoices'
 import ViewInvoice from './viewinvoice'
 import Payments from './payments'
+import Proposals from './proposals'
+import ViewProposal from './viewproposal'
 class ViewProject extends Component {
 
     constructor(props) {
@@ -99,7 +101,8 @@ class ViewProject extends Component {
                 seismic: result.seismic,
                 ptslab: result.ptslab,
                 slope: result.slope,
-                timesheet: result.timesheet
+                timesheet: result.timesheet,
+                schedule: result.schedule
             };
 
             // Update Redux store or local state
@@ -350,6 +353,16 @@ class ViewProject extends Component {
                     </div>
 
 
+                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/proposals`}>/Proposals</Link>
+                        </div>
+                        <div style={{ ...styles.flex1 }}>
+                            &nbsp;
+                        </div>
+                    </div>
+
+
                 </div>
 
                 )
@@ -383,7 +396,9 @@ class ViewProject extends Component {
                 <Route exact path={`${path}/borings/:boringid`} component={ViewBoring} />
                 <Route exact path={`${path}/fieldreports/:fieldid`} component={ViewFieldReport} />
                 <Route exact path={`${path}/invoices`} component={Invoices} />
+                <Route exact path={`${path}/proposals`} component={Proposals} />
                 <Route exact path={`${path}/invoices/:invoiceid`} component={ViewInvoice} />
+                <Route exact path={`${path}/proposals/:proposalid`} component={ViewProposal} />
                 <Route exact path={`${path}/invoices/:invoiceid/payments`} component={Payments} />
 
             </Switch>

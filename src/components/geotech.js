@@ -53,6 +53,15 @@ class Geotech {
         }
     }
 
+    getProposals(projectid) {
+        const geotech = new Geotech();
+        const project = geotech.getProjectByID.call(this, projectid);
+        if (project.schedule) {
+            return project.schedule?.proposals ?? [];
+
+        }
+    }
+
     getInvoiceByID(projectid, invoiceid) {
         const geotech = new Geotech();
         const invoices = geotech.getInvoices.call(this, projectid) ?? [];
@@ -93,6 +102,59 @@ class Geotech {
         return [...laborItems, ...costItems]
             .sort((a, b) => b.sortdate - a.sortdate);
     }
+
+    getProposalIndexByID(projectid, proposalid) {
+        const geotech = new Geotech();
+        const proposals = geotech.getProposals.call(this, projectid) ?? [];
+
+        const index = proposals.findIndex(
+            proposal => proposal.proposalid === proposalid
+        );
+
+        return index === -1 ? null : index;
+    }
+
+    getProposalByID(projectid, proposalid) {
+        const geotech = new Geotech();
+        const proposals = geotech.getProposals.call(this, projectid) ?? [];
+
+        return proposals.find(proposal => proposal.proposalid === proposalid) || null;
+    }
+
+    getProposalLineItems(projectid, proposalid) {
+        const geotech = new Geotech();
+
+        const project = geotech.getProjectByID.call(this, projectid);
+        const proposal = geotech.getProposalByID.call(this, projectid, proposalid);
+
+        if (!project || !proposal) return [];
+
+        const labor = project?.schedule?.labor ?? [];
+        const costs = project?.schedule?.costs ?? [];
+
+        // 🔥 Match proposal labor IDs
+        const laborItems = labor
+            .filter(item => proposal.labor?.includes(item.laborid))
+            .map(item => ({
+                ...item,
+                type: 'labor',
+                sortdate: new Date(item.timein)
+            }));
+
+        // 🔥 Match proposal cost IDs
+        const costItems = costs
+            .filter(item => proposal.costs?.includes(item.costid))
+            .map(item => ({
+                ...item,
+                type: 'cost',
+                sortdate: new Date(item.datein)
+            }));
+
+        // 🔥 Combine + sort reverse chronological
+        return [...laborItems, ...costItems]
+            .sort((a, b) => b.sortdate - a.sortdate);
+    }
+
 
     getFieldReports(projectid) {
         const geotech = new Geotech();

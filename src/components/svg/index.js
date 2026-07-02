@@ -252,6 +252,17 @@ export function saveProjectsIcon() {
 </svg>)
 }
 
+export function authorize() {
+  return(
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 265.65 84.13">
+
+  <g id="png">
+    <rect className="authorize-4" width="265.65" height="84.13" rx="13.84" ry="13.84"/>
+    <text className="authorize-3" transform="translate(9.88 47.28) scale(1.86 1)"><tspan className="authorize-2" x="0" y="0">Authorize</tspan></text>
+  </g>
+</svg>)
+}
+
 export function payNow() {
   return(<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 238.65 84.13">
   

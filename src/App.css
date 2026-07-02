@@ -387,6 +387,30 @@ body {
   width: 200px;
 }
 
+.authorize-1 {
+  letter-spacing: 0em;
+}
+
+.authorize-2 {
+  letter-spacing: 0em;
+}
+
+.authorize-3 {
+  fill: #fff;
+  font-family: Roboto-CondensedSemiBold, Roboto;
+  font-size: 30px;
+  font-variation-settings: 'wght' 600, 'wdth' 75;
+  font-weight: 600;
+}
+
+.authorize-4 {
+  fill: #8ec4aa;
+}
+
+.authorize-5 {
+  letter-spacing: 0em;
+}
+
 
 
 

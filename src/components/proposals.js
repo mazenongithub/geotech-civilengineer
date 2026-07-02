@@ -8,7 +8,7 @@ import { formatDate } from './functions'
 import { gotoIcon } from './svg';
 
 
-class Invoices extends Component {
+class Proposals extends Component {
 
     constructor(props) {
         super(props);
@@ -31,16 +31,16 @@ class Invoices extends Component {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
-    showInvoices() {
+    showProposals() {
         const geotech = new Geotech();
         const { projectid } = this.props.match.params;
 
-        const invoices = geotech.getInvoices.call(this, projectid) || [];
+        const proposals = geotech.getProposals.call(this, projectid) || [];
 
-        return invoices.map(invoice => this.showInvoice(invoice));
+        return proposals.map(proposal => this.showProposal(proposal));
     }
 
-    showInvoice(invoice) {
+    showProposal(proposal) {
         const styles = MyStylesheet();
         const geotech = new Geotech();
 
@@ -48,7 +48,7 @@ class Invoices extends Component {
         const { projectid } = this.props.match.params;
         const project = geotech.getProjectByID.call(this, projectid);
 
-        if (!user || !project || !invoice) return null;
+        if (!user || !project || !proposal) return null;
 
         const headerFont = geotech.getHeaderFont.call(this);
         const regularFont = geotech.getRegularFont.call(this);
@@ -58,11 +58,11 @@ class Invoices extends Component {
         return (
             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
                 <Link
-                    to={`/projects/${user.clientid}/${project.projectid}/invoices/${invoice.invoiceid}`}
+                    to={`/projects/${user.clientid}/${project.projectid}/proposals/${proposal.proposalid}`}
                     style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }}
                 >
                     <span>
-                        Invoice Date {formatDate(invoice.dateinvoice)}
+                        Proposal Date {formatDate(proposal.dateproposal)}
                     </span>
 
                     <button style={{ ...styles.generalButton, ...gotoIconWidth }}>
@@ -114,12 +114,12 @@ class Invoices extends Component {
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                     <Link
                         style={{ ...styles.generalFont, ...headerFont, ...styles.generalLink, ...styles.boldFont }}
-                        to={`/projects/${user.clientid}/${project.projectid}/invoices`}>
-                        /Invoices
+                        to={`/projects/${user.clientid}/${project.projectid}/proposals`}>
+                        /Proposals
                     </Link>
                 </div>
 
-                {this.showInvoices()}
+                {this.showProposals()}
 
 
 
@@ -134,4 +134,4 @@ function mapStateToProps(state) {
         projects: state.projects,
     }
 }
-export default connect(mapStateToProps, actions)(Invoices)
+export default connect(mapStateToProps, actions)(Proposals)

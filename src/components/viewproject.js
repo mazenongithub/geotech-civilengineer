@@ -169,14 +169,27 @@ class ViewProject extends Component {
             const index = geotech.getProjectKeyByID.call(this, projectid);
             if (index === null) throw new Error("Project index not found");
 
+            // Only send the fields that can be edited
+            const updatedProject = {
+                title: project.title,
+                sow: project.sow,
+                projectcity: project.projectcity,
+                projectaddress: project.projectaddress,
+                projectapn: project.projectapn
+            };
+
             const response = await SaveProject(projectid, {
-                updatedProject: project
+                updatedProject
             });
 
             if (response?.updatedproject) {
-                // avoid mutating original array
+
                 const updatedProjects = [...projects];
-                updatedProjects[index] = response.updatedproject;
+
+                updatedProjects[index] = {
+                    ...updatedProjects[index],      // Keep everything already in Redux
+                    ...response.updatedproject      // Overwrite only the saved fields
+                };
 
                 this.props.reduxProjects(updatedProjects);
             }
@@ -334,7 +347,7 @@ class ViewProject extends Component {
                         </div>
                     </div>
 
-                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
                             <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/maps`}>/Geologic Maps</Link>
                         </div>
@@ -343,7 +356,7 @@ class ViewProject extends Component {
                         </div>
                     </div>
 
-                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
                             <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/invoices`}>/Invoices</Link>
                         </div>
@@ -353,7 +366,7 @@ class ViewProject extends Component {
                     </div>
 
 
-                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
                             <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/proposals`}>/Proposals</Link>
                         </div>

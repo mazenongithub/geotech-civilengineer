@@ -195,32 +195,70 @@ class MyProjects extends Component {
         this.setState({ activeprojectid: null });
     }
 
-    async saveprojects() {
-        const geotech = new Geotech();
+ async saveprojects() {
+    const geotech = new Geotech();
 
-        try {
-            const projects = geotech.getProjects.call(this) || [];
-            const user = geotech.getUser.call(this);
+    try {
+        const projects = geotech.getProjects.call(this) || [];
+        const user = geotech.getUser.call(this);
 
-            if (!user?._id) {
-                throw new Error("User not loaded");
-            }
-
-            const response = await SaveProjects(user._id, { projects });
-
-            if (response?.projects) {
-                this.props.reduxProjects(response.projects)
-            }
-
-            if (response?.message) {
-                this.setState({ message: response.message });
-            }
-
-        } catch (err) {
-            console.error("Error saving projects:", err);
-            alert(`Error Saving Projects: ${err.message || err}`);
+        if (!user?._id) {
+            throw new Error("User not loaded");
         }
+
+        // Only send database project fields
+        const projectsToSave = projects.map(project => ({
+            projectid: project.projectid,
+            title: project.title,
+            sow: project.sow,
+            clientid: project.clientid,
+            projectaddress: project.projectaddress,
+            projectcity: project.projectcity,
+            projectapn: project.projectapn
+        }));
+
+        const response = await SaveProjects(user._id, {
+            projects: projectsToSave
+        });
+
+        if (response?.projects) {
+
+            const updatedProjects = [...projects];
+
+            response.projects.forEach(savedProject => {
+
+                const index = updatedProjects.findIndex(
+                    p => p.projectid === savedProject.projectid
+                );
+
+                if (index !== -1) {
+                    updatedProjects[index] = {
+                        ...updatedProjects[index],
+                        _id:savedProject._id,
+                        projectid: savedProject.projectid,
+                        title: savedProject.title,
+                        sow: savedProject.sow,
+                        clientid: savedProject.clientid,
+                        projectaddress: savedProject.projectaddress,
+                        projectcity: savedProject.projectcity,
+                        projectapn: savedProject.projectapn
+                    };
+                }
+
+            });
+
+            this.props.reduxProjects(updatedProjects);
+        }
+
+        if (response?.message) {
+            this.setState({ message: response.message });
+        }
+
+    } catch (err) {
+        console.error("Error saving projects:", err);
+        alert(`Error Saving Projects: ${err.message || err}`);
     }
+}
 
     getActiveMessage() {
         if (this.state.activeprojectid) {

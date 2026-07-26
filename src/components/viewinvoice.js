@@ -5,8 +5,9 @@ import { MyStylesheet } from './styles'
 import Geotech from './geotech';
 import { Link, useParams } from 'react-router-dom';
 import { formatDate, formatTime, calculateHours, calculateCost, calculateLaborCost } from './functions'
-import { gotoIcon, payNow } from './svg';
+import { clickToDownload, gotoIcon, payNow } from './svg';
 import { loadStripe } from "@stripe/stripe-js";
+import { DownloadInvoice } from "./actions/api";
 
 import {
     Elements,
@@ -15,6 +16,7 @@ import {
     useElements,
 } from "@stripe/react-stripe-js";
 import { CreatePaymentIntent } from './actions/api';
+
 
 const stripePromise = loadStripe(
     process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY
@@ -114,6 +116,25 @@ class ViewInvoice extends Component {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
+
+     async downloadInvoice() {
+        try {
+            const { projectid, invoiceid } = this.props.match.params;
+
+            // Fetch PDF Blob
+            const pdfBlob = await DownloadInvoice(projectid, invoiceid);
+
+            // Create a URL and open it
+            const url = URL.createObjectURL(pdfBlob);
+            window.open(url, "_blank");
+
+        } catch (err) {
+            console.error("Error loading summary:", err);
+            alert(err.message || "Failed to load summary.");
+        }
+    }
+
+
 
 
     showLineItems() {
@@ -395,6 +416,36 @@ class ViewInvoice extends Component {
     }
 
 
+    
+    
+
+   async downloadInvoice() {
+    try {
+        const { projectid, invoiceid } = this.props.match.params;
+
+        // Fetch PDF Blob
+        const pdfBlob = await DownloadInvoice(projectid, invoiceid);
+
+        // Create a blob URL
+        const url = URL.createObjectURL(pdfBlob);
+
+        // Create a temporary download link
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `Invoice-${invoiceid}.pdf`; // Choose any filename you like
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Release the blob URL
+        URL.revokeObjectURL(url);
+
+    } catch (err) {
+        console.error("Error downloading invoice:", err);
+        alert(err.message || "Failed to download invoice.");
+    }
+}
 
 
 
@@ -445,6 +496,7 @@ class ViewInvoice extends Component {
         };
 
         const buttonWidth = { width: '180px' }
+        const iconWidth = {width:'5em'}
 
 
         return (
@@ -490,6 +542,11 @@ class ViewInvoice extends Component {
                     <span style={{ ...regularFont }}>Invoice for Geotechnical Services</span>
                 </div>
 
+                   <div style={{...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15}}>
+                     <button style={{...styles.generalButton, ...iconWidth}} onClick={()=>{this.downloadInvoice()}}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
+                </div>
+               
+
                 {this.showLineItems()}
 
                 {this.showTotal()}
@@ -497,6 +554,24 @@ class ViewInvoice extends Component {
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
                     {this.showPayment()}
                 </div>
+
+                <div style={{...styles.generalFlex, ...styles.bottomMargin15}}>
+                    <div style={{...styles.flex1, ...styles.generalFont}}>
+                        <span style={{...regularFont}}>
+                             Status: {invoice.paymentstatus}
+                        </span>
+
+                    </div>
+                    <div style={{...styles.flex1, ...styles.generalFont}}>
+
+                         <span style={{...regularFont}}>
+                             Date Paid: {formatDate(invoice.datepaid)}
+                        </span>
+                        
+                    </div>
+                </div>
+
+              
 
             </div>
         );

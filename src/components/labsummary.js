@@ -8,7 +8,7 @@ import { calcdryden, moist } from './functions';
 import UnconfinedCalcs from './unconfinedcalcs';
 import SoilClassification from './soilclassification';
 import { GetSummary } from './actions/api';
-import { downloadIcon } from './svg';
+import { clickToDownload } from './svg';
 
 
 class LabSummary extends Component {
@@ -154,20 +154,33 @@ class LabSummary extends Component {
         </tr>)
     }
 
-    async getSummary() {
+  
+
+
+    async downloadSummary() {
         try {
             const { projectid } = this.props.match.params;
 
             // Fetch PDF Blob
-            const pdfBlob = await GetSummary(projectid);
-
-            // Create a URL and open it
+            const pdfBlob = await GetSummary(projectid)
+            // Create a blob URL
             const url = URL.createObjectURL(pdfBlob);
-            window.open(url, "_blank");
+
+            // Create a temporary download link
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `LabSummary-${projectid}.pdf`; // Choose any filename you like
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Release the blob URL
+            URL.revokeObjectURL(url);
 
         } catch (err) {
-            console.error("Error loading summary:", err);
-            alert(err.message || "Failed to load summary.");
+            console.error("Error downloading summary:", err);
+            alert(err.message || "Failed to download summary.");
         }
     }
 
@@ -182,6 +195,7 @@ class LabSummary extends Component {
         const regularFont = geotech.getRegularFont.call(this)
         const project = geotech.getProjectByID.call(this, projectid)
         const buttonWidth = { width: '200px' }
+        const iconWidth = { width: '5em' }
 
         if (project) {
 
@@ -211,6 +225,10 @@ class LabSummary extends Component {
                     </Link>
                 </div>
 
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                    <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.downloadSummary() }}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
+                </div>
+
 
                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
 
@@ -236,7 +254,7 @@ class LabSummary extends Component {
                     </table>
                 </div>
 
-               
+
 
 
 

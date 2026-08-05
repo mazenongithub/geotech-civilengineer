@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import Geotech from './geotech';
 import { formatDate, milestoneformatdatestring } from './functions'
 import CompactionTable from './compactiontable';
+import { clickToDownload } from './svg';
+import { DownloadfieldReport } from './actions/api';
 class ViewFieldReport extends Component {
     constructor(props) {
         super(props);
@@ -23,12 +25,12 @@ class ViewFieldReport extends Component {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
-   getFieldReport() {
-    const geotech = new Geotech();
-    const { projectid, fieldid } = this.props.match.params;
+    getFieldReport() {
+        const geotech = new Geotech();
+        const { projectid, fieldid } = this.props.match.params;
 
-    return geotech.getFieldReportById.call(this, projectid, fieldid) ?? null;
-}
+        return geotech.getFieldReportById.call(this, projectid, fieldid) ?? null;
+    }
 
     compactionReport() {
         const geotech = new Geotech();
@@ -139,7 +141,7 @@ class ViewFieldReport extends Component {
         const { projectid, fieldid } = this.props.match.params;
 
         const compactiontests = geotech.getcompactiontestsbyfieldid.call(this, projectid, fieldid)
-      
+
         if (compactiontests) {
             compactiontests.sort((a, b) => {
                 if (Number(a.testnum) >= Number(b.testnum)) {
@@ -290,7 +292,7 @@ class ViewFieldReport extends Component {
                 images.push(
                     <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }} key={fieldimage.imageid}>
                         <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                            <img style={{...styles.width33}} src={`${process.env.REACT_APP_SERVER_API}${fieldimage.image}`} alt={fieldimage.caption} />
+                            <img style={{ ...styles.width33 }} src={`${process.env.REACT_APP_SERVER_API}${fieldimage.image}`} alt={fieldimage.caption} />
                         </div>
                         <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                             <span style={{ ...regularFont }}>{fieldimage.caption}</span>
@@ -305,6 +307,36 @@ class ViewFieldReport extends Component {
 
     }
 
+   async downloadFieldReport() {
+
+     try {
+            const { projectid, fieldid } = this.props.match.params;
+    
+            // Fetch PDF Blob
+            const pdfBlob = await DownloadfieldReport(projectid, fieldid);
+    
+            // Create a blob URL
+            const url = URL.createObjectURL(pdfBlob);
+    
+            // Create a temporary download link
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `fieldreport-${fieldid}.pdf`; // Choose any filename you like
+    
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+    
+            // Release the blob URL
+            URL.revokeObjectURL(url);
+    
+        } catch (err) {
+            console.error("Error downloading field report:", err);
+            alert(err.message || "Failed to download field report.");
+        }
+
+    }
+
     render() {
         const geotech = new Geotech();
         const styles = MyStylesheet();
@@ -316,6 +348,8 @@ class ViewFieldReport extends Component {
         const fieldid = this.props.match.params.fieldid;
         const report = this.getFieldReport();
         const compactiontable = new CompactionTable();
+        const myuser = geotech.getUser.call(this)
+        const iconWidth = {width:'5em'}
 
         if (project) {
 
@@ -324,33 +358,33 @@ class ViewFieldReport extends Component {
                 const datereport = milestoneformatdatestring(report.datereport)
 
                 return (<div style={{ ...styles.generalContainer }}>
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                         <Link
                             style={{ ...styles.generalFont, ...headerFont, ...styles.generalLink, ...styles.boldFont }}
-                            to={`/${engineerid}/profile`}>
-                            /{engineerid}
+                            to={`/profile/${myuser.clientid}`}>
+                            /{myuser.clientid}
                         </Link>
                     </div>
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                         <Link
                             style={{ ...styles.generalFont, ...headerFont, ...styles.generalLink, ...styles.boldFont }}
-                            to={`/${engineerid}/projects`}>
+                            to={`/projects/${myuser.clientid}/`}>
                             /projects
                         </Link>
                     </div>
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                         <Link
                             style={{ ...styles.generalFont, ...headerFont, ...styles.generalLink, ...styles.boldFont }}
-                            to={`/${engineerid}/projects/${projectid}`}>
+                            to={`/projects/${myuser.clientid}/${projectid}`}>
                             /{project.projectnumber} - {project.title} {project.address} {project.city}
                         </Link>
                     </div>
 
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                         <Link
                             style={{ ...styles.generalFont, ...headerFont, ...styles.generalLink, ...styles.boldFont }}
-                            to={`/${engineerid}/projects/${projectid}/fieldreports`}>
-                            /fieldreports
+                            to={`/projects/${myuser.clientid}/${project.projectid}/fieldreports`}>
+                            /FieldReports
                         </Link>
                     </div>
                     <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
@@ -360,6 +394,10 @@ class ViewFieldReport extends Component {
                             /{formatDate(datereport)}
                         </Link>
                     </div>
+
+                        <div style={{...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15}}>
+                                         <button style={{...styles.generalButton, ...iconWidth}} onClick={()=>{this.downloadFieldReport()}}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
+                                    </div>
 
                     <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
                         <span style={{ ...styles.generalFont, ...regularFont }}>

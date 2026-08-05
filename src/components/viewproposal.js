@@ -5,8 +5,8 @@ import { MyStylesheet } from './styles'
 import Geotech from './geotech';
 import { Link, useParams } from 'react-router-dom';
 import { formatDate, formatTime, calculateHours, calculateCost, calculateLaborCost, formatDateTime } from './functions'
-import { authorize } from './svg';
-import { UpdateProposal } from './actions/api';
+import { authorize, clickToDownload } from './svg';
+import { UpdateProposal, DownloadProposal } from './actions/api';
 
 
 class ViewProposal extends Component {
@@ -387,6 +387,35 @@ class ViewProposal extends Component {
         return approvedby;
     }
 
+    async downloadProposal() {
+        try {
+            const { projectid, proposalid } = this.props.match.params;
+
+            // Fetch PDF Blob
+            const pdfBlob = await DownloadProposal(projectid, proposalid);
+
+            // Create a blob URL
+            const url = URL.createObjectURL(pdfBlob);
+
+            // Create a temporary download link
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `Proposal-${proposalid}.pdf`; // Choose any filename you like
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Release the blob URL
+            URL.revokeObjectURL(url);
+
+        } catch (err) {
+            console.error("Error downloading proposal:", err);
+            alert(err.message || "Failed to download proposal.");
+        }
+    }
+
+
 
 
     render() {
@@ -400,7 +429,11 @@ class ViewProposal extends Component {
         const proposal = geotech.getProposalByID.call(this, projectid, proposalid);
 
         const headerFont = geotech.getHeaderFont.call(this);
-        const regularFont = geotech.getRegularFont.call(this)
+        const regularFont = geotech.getRegularFont.call(this);
+        const iconWidth = { width: '5em' }
+
+
+
 
         // 🔥 Prevent crashes on refresh/loading
         if (!user || !project) {
@@ -479,6 +512,10 @@ class ViewProposal extends Component {
 
                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15, ...styles.alignCenter }}>
                     <span style={{ ...regularFont }}>Proposal for Geotechnical Services</span>
+                </div>
+
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                    <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.downloadProposal() }}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
                 </div>
 
                 {this.showLineItems()}

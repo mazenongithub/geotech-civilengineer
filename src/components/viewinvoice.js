@@ -117,25 +117,7 @@ class ViewInvoice extends Component {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
-     async downloadInvoice() {
-        try {
-            const { projectid, invoiceid } = this.props.match.params;
-
-            // Fetch PDF Blob
-            const pdfBlob = await DownloadInvoice(projectid, invoiceid);
-
-            // Create a URL and open it
-            const url = URL.createObjectURL(pdfBlob);
-            window.open(url, "_blank");
-
-        } catch (err) {
-            console.error("Error loading summary:", err);
-            alert(err.message || "Failed to load summary.");
-        }
-    }
-
-
-
+  
 
     showLineItems() {
         const { projectid, invoiceid } = this.props.match.params;

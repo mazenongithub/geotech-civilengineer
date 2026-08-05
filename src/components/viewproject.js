@@ -49,12 +49,11 @@ class ViewProject extends Component {
             : this.props.projects?.projects || [];
 
         // Debug what’s really happening
-        console.log("Prev projects:", prevProjects.length);
-        console.log("Current projects:", currentProjects.length);
+
 
         // Run when projects just became available
         if (prevProjects.length === 0 && currentProjects.length > 0 && !this.state.project) {
-            console.log("✅ Detected projects loaded — calling loadProjectData()");
+           // console.log("✅ Detected projects loaded — calling loadProjectData()");
             await this.loadProjectData();
         }
 
@@ -333,47 +332,40 @@ class ViewProject extends Component {
                             <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/borings`}>/Soil Borings Logs</Link>
                         </div>
                         <div style={{ ...styles.flex1 }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/geotechnical`}>/Geotechnical Report</Link>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/reports`}>/Technical Reports</Link>
                         </div>
                     </div>
 
 
                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/technical`}>/Technical Reports</Link>
+                             <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/documents`}>/Documents </Link>
                         </div>
                         <div style={{ ...styles.flex1 }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/labsummary`}>/Lab Summary</Link>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/labsummary`}>/Soil Lab </Link>
                         </div>
                     </div>
 
                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/maps`}>/Geologic Maps</Link>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/maps`}>/Geology</Link>
                         </div>
                         <div style={{ ...styles.flex1 }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/fieldreports`}>/Field Reports</Link>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/fieldreports`}>/Site Reports</Link>
                         </div>
                     </div>
 
                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/invoices`}>/Invoices</Link>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/proposals`}>/Proposals (Schedule)</Link>
                         </div>
                         <div style={{ ...styles.flex1 }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/costs`}>/Cost Tracking</Link>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/Invoices`}>/Invoices</Link>
                         </div>
                     </div>
 
 
-                    <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/proposals`}>/Proposals</Link>
-                        </div>
-                        <div style={{ ...styles.flex1 }}>
-                            &nbsp;
-                        </div>
-                    </div>
+                   
 
 
                 </div>

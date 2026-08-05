@@ -27,7 +27,7 @@ class Profile extends Component {
     }
 
     getValue(prop) {
-        console.log(prop)
+     
         const geotech = new Geotech();
         const user = geotech.getUser.call(this);
 

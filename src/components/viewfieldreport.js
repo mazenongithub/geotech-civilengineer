@@ -390,7 +390,7 @@ class ViewFieldReport extends Component {
                     <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                         <Link
                             style={{ ...styles.generalFont, ...headerFont, ...styles.generalLink, ...styles.boldFont }}
-                            to={`/${engineerid}/projects/${projectid}/fieldreports/${fieldid}`}>
+                            to={`/projects/${myuser.clientid}/${projectid}/fieldreports/${fieldid}`}>
                             /{formatDate(datereport)}
                         </Link>
                     </div>

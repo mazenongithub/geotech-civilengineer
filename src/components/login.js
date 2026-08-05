@@ -122,6 +122,7 @@ class Login extends Component {
 
         try {
             const response = await LoginUser(values);
+            console.log(response)
 
             // 1️⃣ Update Redux with user and projects
             if (response.client) {

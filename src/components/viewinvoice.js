@@ -505,7 +505,7 @@ class ViewInvoice extends Component {
                 <div style={rowStyle}>
                     <Link
                         style={linkStyle}
-                        to={`/ projects / ${user.clientid} / ${project.projectid} / invoices`}
+                        to={`/projects/${user.clientid}/${project.projectid}/invoices`}
                     >
                         /Invoices
                     </Link>
@@ -514,7 +514,7 @@ class ViewInvoice extends Component {
                 <div style={rowStyle}>
                     <Link
                         style={linkStyle}
-                        to={`/ projects / ${user.clientid} / ${project.projectid} / invoices / ${invoiceid}`}
+                        to={`/projects/${user.clientid}/${project.projectid}/invoices/${invoiceid}`}
                     >
                         /{formatDate(invoice.dateinvoice)}
                     </Link>

@@ -226,7 +226,7 @@ class LabSummary extends Component {
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                    <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.downloadSummary() }}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
+                    <button className={`generalButton`} style={{...iconWidth }} onClick={() => { this.downloadSummary() }}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
                 </div>
 
 

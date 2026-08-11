@@ -396,7 +396,7 @@ class ViewFieldReport extends Component {
                     </div>
 
                         <div style={{...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15}}>
-                                         <button style={{...styles.generalButton, ...iconWidth}} onClick={()=>{this.downloadFieldReport()}}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
+                                         <button className={`generalButton`} style={{ ...iconWidth}} onClick={()=>{this.downloadFieldReport()}}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
                                     </div>
 
                     <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>

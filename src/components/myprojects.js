@@ -365,7 +365,7 @@ class MyProjects extends Component {
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...saveIconWidth }} onClick={() => { this.saveprojects() }}>{saveProjectsIcon()}</button>
+                    <button  className={`generalButton projectsButton`} style={{ ...saveIconWidth }} onClick={() => { this.saveprojects() }}>{saveProjectsIcon()}</button>
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter, ...styles.generalFont }}>

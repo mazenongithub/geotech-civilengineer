@@ -44,12 +44,15 @@ function CheckoutForm(props) {
         )
     };
 
+
+    const payButtonWidth = { width: '200px' }
+
     return (
         <form onSubmit={handleSubmit}>
             <PaymentElement />
             <div style={{ ...styles.generalContainer }}>
-                <button className="payment-button"
-                    style={{ ...styles.generalButton, ...styles.marginAuto }} type="submit">
+                <button className="generalButton payButton"
+                    style={{ ...styles.generalButton, ...styles.marginAuto, ...payButtonWidth }} type="submit">
                     {payNow()}
                 </button>
             </div>
@@ -496,7 +499,7 @@ class ViewInvoice extends Component {
                 <div style={rowStyle}>
                     <Link
                         style={linkStyle}
-                        to={`/ projects / ${user.clientid} / ${project.projectid}`}
+                        to={`/projects/${user.clientid}/${project.projectid}`}
                     >
                         /{project.title}
                     </Link>
@@ -525,7 +528,7 @@ class ViewInvoice extends Component {
                 </div>
 
                    <div style={{...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15}}>
-                     <button style={{...styles.generalButton, ...iconWidth}} onClick={()=>{this.downloadInvoice()}}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
+                     <button className={`generalButton`} style={{ ...iconWidth}} onClick={()=>{this.downloadInvoice()}}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
                 </div>
                
 

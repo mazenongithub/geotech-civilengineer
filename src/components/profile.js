@@ -391,8 +391,8 @@ class Profile extends Component {
 
             <div style={{ ...styles.generalContainer, ...styles.positionRight, ...uploadIconMargin }}>
 
-                <button onClick={() => document.getElementById("profilephoto").click()}
-                    style={{ ...styles.generalButton, ...uploadContainer }}>{uploadIcon()}</button>
+                <button className={`generalButton`} onClick={() => document.getElementById("profilephoto").click()}
+                    style={{  ...uploadContainer }}>{uploadIcon()}</button>
 
 
                 <span style={{ ...regularFont }}>Upload Profile Image</span>
@@ -436,7 +436,7 @@ class Profile extends Component {
 
 
             <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                <button style={{ ...styles.generalButton, ...saveprofile }} onClick={() => { this.saveProfile() }}>{saveProfileIcon()}</button>
+                <button className={`generalButton`} style={{ ...saveprofile }} onClick={() => { this.saveProfile() }}>{saveProfileIcon()}</button>
             </div>
 
 

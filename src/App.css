@@ -412,18 +412,48 @@ body {
 }
 
 
- .clicktodownload-1 {
-        fill: #fff;
-      }
+.clicktodownload-1 {
+  fill: #fff;
+}
 
-      .clicktodownload-1, .clicktodownload-2 {
-        stroke: #231f20;
-        stroke-miterlimit: 10;
-      }
+.clicktodownload-1,
+.clicktodownload-2 {
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+}
 
-      .clicktodownload-2 {
-        fill: #a7a9ac;
-      }
+.clicktodownload-2 {
+  fill: #a7a9ac;
+}
+
+
+.generalButton {
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  padding: 1px;
+  cursor: pointer;
+  transition: border-color 0.1s ease, transform 0.1s ease
+}
+
+.generalButton:active {
+    transform: translateY(2px);
+}
+
+.authButton:active {
+    transform: translateY(2px);
+}
+
+.payButton:active {
+  
+    transform: translateY(2px);
+}
+
+.projectsButton:active {
+
+  transform: translateY(2px);
+  background: #9e1c33;
+}
 
 
 

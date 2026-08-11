@@ -515,7 +515,7 @@ class ViewProposal extends Component {
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                    <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.downloadProposal() }}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
+                    <button  className={`generalButton`} style={{  ...iconWidth }} onClick={() => { this.downloadProposal() }}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
                 </div>
 
                 {this.showLineItems()}
@@ -523,7 +523,7 @@ class ViewProposal extends Component {
                 {this.showTotal()}
 
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { this.updateProposal() }}>{authorize()}</button>
+                    <button className="generalButton authButton" style={{  ...buttonWidth }} onClick={() => { this.updateProposal() }}>{authorize()}</button>
                 </div>
 
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }}>

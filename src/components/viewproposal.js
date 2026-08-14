@@ -304,7 +304,20 @@ class ViewProposal extends Component {
                     render: "render"
                 });
 
+
+                if (
+                this.props.socket &&
+                this.props.socket.readyState === WebSocket.OPEN
+            ) {
+                this.props.socket.send(JSON.stringify({
+                    type: "viewproposal-client",
+                    message: "proposal updated",
+                    updatedProposal: response.proposal
+                }));
             }
+
+            }
+
 
         } catch (err) {
 

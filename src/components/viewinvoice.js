@@ -40,9 +40,14 @@ function CheckoutForm(props) {
             confirmParams: {
                 return_url: `${window.location.origin}/projects/${clientid}/${projectid}/invoices/${invoiceid}/payments`
             }
-        }
-        )
-    };
+        })
+
+      
+
+
+
+
+    }
 
 
     const payButtonWidth = { width: '200px' }
@@ -120,7 +125,7 @@ class ViewInvoice extends Component {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
-  
+
 
     showLineItems() {
         const { projectid, invoiceid } = this.props.match.params;
@@ -312,7 +317,7 @@ class ViewInvoice extends Component {
 
     async createPaymentIntent() {
         const balance = this.getInvoiceTotal();
-      
+
 
         if (balance <= 0) {
             this.setState({
@@ -401,36 +406,36 @@ class ViewInvoice extends Component {
     }
 
 
-    
-    
 
-   async downloadInvoice() {
-    try {
-        const { projectid, invoiceid } = this.props.match.params;
 
-        // Fetch PDF Blob
-        const pdfBlob = await DownloadInvoice(projectid, invoiceid);
 
-        // Create a blob URL
-        const url = URL.createObjectURL(pdfBlob);
+    async downloadInvoice() {
+        try {
+            const { projectid, invoiceid } = this.props.match.params;
 
-        // Create a temporary download link
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `Invoice-${invoiceid}.pdf`; // Choose any filename you like
+            // Fetch PDF Blob
+            const pdfBlob = await DownloadInvoice(projectid, invoiceid);
 
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+            // Create a blob URL
+            const url = URL.createObjectURL(pdfBlob);
 
-        // Release the blob URL
-        URL.revokeObjectURL(url);
+            // Create a temporary download link
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `Invoice-${invoiceid}.pdf`; // Choose any filename you like
 
-    } catch (err) {
-        console.error("Error downloading invoice:", err);
-        alert(err.message || "Failed to download invoice.");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Release the blob URL
+            URL.revokeObjectURL(url);
+
+        } catch (err) {
+            console.error("Error downloading invoice:", err);
+            alert(err.message || "Failed to download invoice.");
+        }
     }
-}
 
 
 
@@ -481,7 +486,7 @@ class ViewInvoice extends Component {
         };
 
         const buttonWidth = { width: '180px' }
-        const iconWidth = {width:'5em'}
+        const iconWidth = { width: '5em' }
 
 
         return (
@@ -527,10 +532,10 @@ class ViewInvoice extends Component {
                     <span style={{ ...regularFont }}>Invoice for Geotechnical Services</span>
                 </div>
 
-                   <div style={{...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15}}>
-                     <button className={`generalButton`} style={{ ...iconWidth}} onClick={()=>{this.downloadInvoice()}}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                    <button className={`generalButton`} style={{ ...iconWidth }} onClick={() => { this.downloadInvoice() }}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
                 </div>
-               
+
 
                 {this.showLineItems()}
 
@@ -540,23 +545,23 @@ class ViewInvoice extends Component {
                     {this.showPayment()}
                 </div>
 
-                <div style={{...styles.generalFlex, ...styles.bottomMargin15}}>
-                    <div style={{...styles.flex1, ...styles.generalFont}}>
-                        <span style={{...regularFont}}>
-                             Status: {invoice.paymentstatus}
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.flex1, ...styles.generalFont }}>
+                        <span style={{ ...regularFont }}>
+                            Status: {invoice.paymentstatus}
                         </span>
 
                     </div>
-                    <div style={{...styles.flex1, ...styles.generalFont}}>
+                    <div style={{ ...styles.flex1, ...styles.generalFont }}>
 
-                         <span style={{...regularFont}}>
-                             Date Paid: {formatDate(invoice.datepaid)}
+                        <span style={{ ...regularFont }}>
+                            Date Paid: {formatDate(invoice.datepaid)}
                         </span>
-                        
+
                     </div>
                 </div>
 
-              
+
 
             </div>
         );

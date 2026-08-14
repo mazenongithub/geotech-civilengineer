@@ -37,6 +37,42 @@ class ViewProject extends Component {
         }
 
 
+        const { clientid, projectid } = this.props.match.params;
+        const wsHost = `${process.env.REACT_APP_SERVER_API.replace(/^https?:\/\//, "")}`;
+        //  const wsHost = '100.65.74.20:3002'
+        const socket = new WebSocket(`wss://${wsHost}/${clientid}/projects/${projectid}/websocketapi`)
+        // const socket = new WebSocket(`wss://192.168.1.6:3001/test-ws`)
+        //  const socket = new WebSocket(`wss://masterserver.civilengineer.io/test-ws`)
+        socket.onopen = (evt) => {
+
+            console.log("socket open ")
+            const data = { type: "join", clientid };
+            socket.send(JSON.stringify(data));
+            console.log("Project Web Socket Open", data)
+
+        }
+
+        socket.onmessage = (evt) => {
+            console.log("message received");
+            console.log("message:", evt.data);
+        }
+
+        socket.onerror = (evt) => {
+            console.log("SOMETHING WENT WRONG!");
+            console.log(evt);
+        };
+
+        socket.onclose = (evt) => {
+            console.log("WEB SOCKET HAS BEEN CLOSED!!!!");
+        };
+
+        this.socket = socket;
+
+
+
+
+
+
     }
     async componentDidUpdate(prevProps) {
 
@@ -53,7 +89,7 @@ class ViewProject extends Component {
 
         // Run when projects just became available
         if (prevProjects.length === 0 && currentProjects.length > 0 && !this.state.project) {
-           // console.log("✅ Detected projects loaded — calling loadProjectData()");
+            // console.log("✅ Detected projects loaded — calling loadProjectData()");
             await this.loadProjectData();
         }
 
@@ -195,6 +231,15 @@ class ViewProject extends Component {
 
             if (response?.message) {
                 this.setState({ message: response.message });
+            }
+
+            if (this.socket?.readyState === WebSocket.OPEN) {
+                console.log()
+                this.socket.send(JSON.stringify({
+                    type: "viewproject-client",
+                    message: "project saved",
+                    updatedProject: response?.updatedproject || updatedProject
+                }));
             }
 
         } catch (err) {
@@ -339,7 +384,7 @@ class ViewProject extends Component {
 
                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                             <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/documents`}>/Documents </Link>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/documents`}>/Documents </Link>
                         </div>
                         <div style={{ ...styles.flex1 }}>
                             <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/labsummary`}>/Soil Lab </Link>
@@ -365,7 +410,7 @@ class ViewProject extends Component {
                     </div>
 
 
-                   
+
 
 
                 </div>
@@ -402,8 +447,26 @@ class ViewProject extends Component {
                 <Route exact path={`${path}/fieldreports/:fieldid`} component={ViewFieldReport} />
                 <Route exact path={`${path}/invoices`} component={Invoices} />
                 <Route exact path={`${path}/proposals`} component={Proposals} />
-                <Route exact path={`${path}/invoices/:invoiceid`} component={ViewInvoice} />
-                <Route exact path={`${path}/proposals/:proposalid`} component={ViewProposal} />
+                <Route
+                    exact
+                    path={`${path}/invoices/:invoiceid`}
+                    render={(props) => (
+                        <ViewInvoice
+                            {...props}
+                            socket={this.socket}
+                        />
+                    )}
+                />
+                <Route
+                    exact
+                    path={`${path}/proposals/:proposalid`}
+                    render={(props) => (
+                        <ViewProposal
+                            {...props}
+                            socket={this.socket}
+                        />
+                    )}
+                />
                 <Route exact path={`${path}/invoices/:invoiceid/payments`} component={Payments} />
 
             </Switch>

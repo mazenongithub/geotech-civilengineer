@@ -12,7 +12,7 @@ import { CheckUser } from "./components/actions/api";
 import Profile from "./components/profile";
 import MyProjects from "./components/myprojects";
 import ViewProject from './components/viewproject'
-
+import EmailLogin from './components/emaillogin'
 
 class App extends Component {
 
@@ -77,6 +77,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/emaillogin" component={EmailLogin} />
             <Route exact path="/contact" component={Contact} />
             <Route exact path="/features" component={Features} />
             <Route exact path="/profile/:clientid" component={Profile} />

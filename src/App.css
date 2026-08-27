@@ -437,16 +437,16 @@ body {
 }
 
 .generalButton:active {
-    transform: translateY(2px);
+  transform: translateY(2px);
 }
 
 .authButton:active {
-    transform: translateY(2px);
+  transform: translateY(2px);
 }
 
 .payButton:active {
-  
-    transform: translateY(2px);
+
+  transform: translateY(2px);
 }
 
 .projectsButton:active {
@@ -455,6 +455,58 @@ body {
   background: #9e1c33;
 }
 
+
+.emaillogin-1 {
+  fill: #6189b6;
+  stroke: #050606;
+}
+
+.emaillogin-1,
+.emaillogin-2 {
+  stroke-miterlimit: 10;
+}
+
+.emaillogin-3 {
+  fill: #c8e9f4;
+}
+
+.emaillogin-2 {
+  fill: none;
+  stroke: #c8e9f4;
+}
+
+
+.advance-1 {
+  fill: #231f20;
+}
+
+.advance-2 {
+  fill: #fff;
+}
+
+.advance-3 {
+  fill: #6189b6;
+  stroke: #050606;
+  stroke-miterlimit: 10;
+}
+
+  .logmein-1 {
+        fill: #fff;
+        stroke-width: .25px;
+      }
+
+      .logmein-1, .logmein-2 {
+        stroke: #050606;
+        stroke-miterlimit: 10;
+      }
+
+      .logmein-3 {
+        fill: #231f20;
+      }
+
+      .logmein-2 {
+        fill: #6189b6;
+      }
 
 
 

@@ -12,7 +12,7 @@ class EmailLogin extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, emailaddress: null, clientid: null, client_id: null, register: false, message: '', showclientid: false }
+        this.state = { render: '', width: 0, height: 0, emailaddress: null, clientid: null, client_id: null, register: false, message: '', showclientid: false, showemaillogin: false }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -94,7 +94,7 @@ class EmailLogin extends Component {
                     emailaddress,
                     status,
                     message,
-                    showclientid:true
+                    showclientid: true
                 });
 
             } else {
@@ -115,7 +115,7 @@ class EmailLogin extends Component {
         const regularFont = geotech.getRegularFont.call(this)
         const advanceIconWidth = { width: '33%', maxWidth: '170px' }
 
-        if (this.state.status === 'served') {
+        if (this.state.status === 'served' && this.state.showemaillogin) {
 
             return (<div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.rightMargin15 }}>
@@ -145,7 +145,7 @@ class EmailLogin extends Component {
 
         const expirationDate = formatDateTime(this.state.dateexp)
 
-        if (this.state.status === 'served') {
+        if (this.state.status === 'served' && this.state.showemaillogin) {
 
             const needanewcode = () => {
                 return (<div style={{ ...styles.flex1, ...styles.generalFont, ...styles.rightMargin15 }}>
@@ -173,7 +173,7 @@ class EmailLogin extends Component {
         const advanceIconWidth = { width: '33%', maxWidth: '170px' }
 
 
-        if (this.state.showclientid) {
+        if (this.state.showclientid && this.state.showemaillogin) {
 
 
 
@@ -212,47 +212,41 @@ class EmailLogin extends Component {
         }
     }
 
-async registerClient() { 
-    try { 
-        
-    const { clientid, emailaddress } = this.state; 
-    const values = { clientid, emailaddress }; 
-    const registerUser = await RegisterNewClient(values); 
-    if (!registerUser) { throw new Error("No response received from server."); } 
-    const { status, client_id, client, emailaddress: registeredEmail, dateexp, message } = registerUser; 
-    if (status !== 'served') { throw new Error("New client could not be served."); }
-     this.setState({ status, client_id, client, emailaddress: registeredEmail, dateexp, message }); 
-    
-    } catch (err) { console.error("registerClient error:", err); 
-        alert(`Error: Could not register Client. ${err.message}`); } }
+    async registerClient() {
+        try {
+
+            const { clientid, emailaddress } = this.state;
+            const values = { clientid, emailaddress };
+            const registerUser = await RegisterNewClient(values);
+            if (!registerUser) { throw new Error("No response received from server."); }
+            const { status, client_id, client, emailaddress: registeredEmail, dateexp, message } = registerUser;
+            if (status !== 'served') { throw new Error("New client could not be served."); }
+            this.setState({ status, client_id, client, emailaddress: registeredEmail, dateexp, message });
+
+        } catch (err) {
+            console.error("registerClient error:", err);
+            alert(`Error: Could not register Client. ${err.message}`);
+        }
+    }
 
 
+    toggleEmailLogin() {
+        this.setState(prev => ({
+            showemaillogin: !prev.showemaillogin
+        }));
+    }
 
+    emailLoginForm() {
 
-render() {
+        const styles = MyStylesheet();
+        const geotech = new Geotech();
+        const regularFont = geotech.getRegularFont.call(this)
+        const buttonWidth = { width: '80%', maxWidth: '280px' }
+        const advanceIconWidth = { width: '33%', maxWidth: '170px' }
 
-    const styles = MyStylesheet();
-    const geotech = new Geotech();
-    const regularFont = geotech.getRegularFont.call(this)
-    const buttonWidth = { width: '80%', maxWidth: '280px' }
-    const advanceIconWidth = { width: '33%', maxWidth: '170px' }
+        if (this.state.showemaillogin) {
 
-    return (
-        <div style={{ ...styles.generalContainer }}>
-            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
-                <span style={{ ...regularFont }}>One-Time Passcode Login</span>
-            </div>
-
-            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button className="generalButton" style={{ ...buttonWidth }}>{emaillogin()}</button>
-                </div>
-            </div>
-
-
-
-
-            <div style={{ ...styles.generalFlex }}>
+            return (<div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.rightMargin15 }}>
                     <span style={{ ...regularFont }}> Enter the email address for your account </span>
                 </div>
@@ -266,37 +260,74 @@ render() {
                     </div>
                 </div>
             </div>
+            )
 
+        }
+    }
 
-
-            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
+    showmessage() {
+        const styles = MyStylesheet();
+        const geotech = new Geotech();
+        const regularFont = geotech.getRegularFont.call(this)
+        if (this.state.showemaillogin) {
+            return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
                 <span style={{ ...regularFont }}>{this.state.message}</span>
-            </div>
+            </div>)
+        }
+    }
 
-            {this.showClientID()}
+    render() {
+
+        const styles = MyStylesheet();
+        const geotech = new Geotech();
+        const regularFont = geotech.getRegularFont.call(this)
+        const buttonWidth = { width: '80%', maxWidth: '280px' }
+        const advanceIconWidth = { width: '33%', maxWidth: '170px' }
+
+        return (
+            <div style={{ ...styles.generalContainer }}>
+                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
+                    <span style={{ ...regularFont }}>One-Time Passcode Login</span>
+                </div>
+
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                        <button className="generalButton" style={{ ...buttonWidth }} onClick={() => { this.toggleEmailLogin() }}>{emaillogin()}</button>
+                    </div>
+                </div>
 
 
-            {this.passCodeLoginBox()}
-
-            {this.expirationCodeBox()}
 
 
+                {this.emailLoginForm()}
 
 
+                {this.showmessage()}
+
+                {this.showClientID()}
 
 
+                {this.passCodeLoginBox()}
 
-
-
-
-
-
+                {this.expirationCodeBox()}
 
 
 
 
-        </div>)
-}
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>)
+    }
 }
 
 function mapStateToProps(state) {

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./login.css";
 import * as actions from './actions';
 import { connect } from 'react-redux'
-import { LoginUser } from "./actions/api";
+import { LoginUser, CreateClient } from "./actions/api";
 import { getAuth } from "firebase/auth";
 import { auth, googleProvider, appleProvider } from "./firebase";
 import { signInWithPopup } from "firebase/auth"
@@ -10,17 +10,33 @@ import Profile from "./profile";
 import Geotech from './geotech'
 import { MyStylesheet } from "./styles";
 import Register from "./register";
+import EmailLogin from './emaillogin'
 
 class Login extends Component {
     constructor(props) {
         super(props)
-        this.state = { email: '', setEmail: "", password: "", setPassword: "", firstname: "", lastname: "", emailaddress: "", profileurl: "", phonenumber: "", apple: "", clientid: '', google: '', register: false }
+        this.state = { firstname: "", lastname: "", emailaddress: "", profileurl: "", phonenumber: "", apple: "", clientid: '', google: '', status: '', register: `` }
     }
 
+    resetState() {
+        this.setState({
+            firstname: '',
+            lastname: '',
+            emailaddress: '',
+            profileurl: '',
+            phonenumber: '',
+            apple: '',
+            clientid: '',
+            google: '',
+            status: '',
+            register: ''
+        });
+    }
     async handleAppleLogin() {
 
-
+        this.resetState()
         const auth = getAuth();
+
 
 
 
@@ -28,7 +44,6 @@ class Login extends Component {
         try {
 
             const result = await signInWithPopup(auth, appleProvider);
-            console.log(result)
             let firstname = "";
             let lastname = "";
             let emailaddress = "";
@@ -70,6 +85,7 @@ class Login extends Component {
 
     async handleGoogleLogin() {
 
+        this.resetState()
 
 
 
@@ -85,7 +101,7 @@ class Login extends Component {
 
 
             const result = await signInWithPopup(auth, googleProvider);
-            console.log(result)
+
             if (result.hasOwnProperty("user")) {
 
                 user = result.user;
@@ -96,7 +112,7 @@ class Login extends Component {
                 emailaddress = user.providerData[0].email
                 profileurl = user.providerData[0].photoURL
                 phonenumber = user.phoneNumber;
-                console.log(firstname, lastname, emailaddress, profileurl, phonenumber, google)
+
             }
 
             this.setState(
@@ -118,19 +134,43 @@ class Login extends Component {
         const { firstname, lastname, emailaddress, profileurl, phonenumber, apple, google, clientid } = this.state;
 
         const values = { firstname, lastname, emailaddress, profileurl, phonenumber, apple, google, clientid };
-        console.log("Logging in with values:", values);
+
 
         try {
             const response = await LoginUser(values);
-            console.log(response)
+
 
             // 1️⃣ Update Redux with user and projects
             if (response.client) {
+
                 this.props.reduxUser(response.client); // was 'response.engineer'? Changed to 'client'
+
+                if (response.projects) {
+                    this.props.reduxProjects(response.projects);
+                }
+
+                this.resetState()
+
             }
 
-            if (response.projects) {
-                this.props.reduxProjects(response.projects);
+
+
+            if (response.status === 'Register') {
+
+
+
+                let apple = "";
+                let google = "";
+                if (response.provider === 'apple') {
+                    apple = response.providerId
+
+                } else if (response.provider === 'google') {
+                    google = response.providerId;
+                }
+
+
+
+                this.setState({ status: 'Register', register: response.register, clientid: '', apple, google })
             }
 
             // 2️⃣ No need for setState hack; Redux should trigger re-render
@@ -141,6 +181,30 @@ class Login extends Component {
         }
     }
 
+    async createClient() {
+
+
+        try {
+            let { client_id, clientid, emailaddress, apple, google } = this.state;
+            let values = { client_id, clientid, emailaddress, apple, google }
+            let createClient = await CreateClient(values)
+
+            if (createClient.newClient) {
+                const { client_id, clientid, emailaddress, apple, google } = createClient.newClient
+                const status = createClient.status;
+                this.props.reduxUser(createClient.newClient)
+                this.setState({ client_id, clientid, emailaddress, apple, google, status })
+
+            }
+
+
+
+        } catch (err) {
+            alert(`Error: Could not create client ${err}`)
+        }
+    }
+
+
     showLogin() {
         const styles = MyStylesheet();
         const geotech = new Geotech();
@@ -150,11 +214,17 @@ class Login extends Component {
         return (
 
             <div className="login-container">
+
+              
                 <div className="login-box">
 
-                    <h2>Login</h2>
+                      <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
+                    <h2 style={{ ...regularFont }}>Login with:</h2>
+                </div>
 
-                    {register.showRegister.call(this)}
+                   
+
+
 
                     {/* Apple Login */}
                     <button className="login-btn apple" onClick={() => { this.handleAppleLogin() }}>
@@ -177,6 +247,10 @@ class Login extends Component {
                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="google" />
                         Sign in with Google
                     </button>
+
+                    {register.showRegister.call(this)}
+
+                    <EmailLogin />
 
 
                     <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>

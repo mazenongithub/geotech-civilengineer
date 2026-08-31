@@ -490,23 +490,40 @@ body {
   stroke-miterlimit: 10;
 }
 
-  .logmein-1 {
-        fill: #fff;
-        stroke-width: .25px;
-      }
+.logmein-1 {
+  fill: #fff;
+  stroke-width: .25px;
+}
 
-      .logmein-1, .logmein-2 {
-        stroke: #050606;
-        stroke-miterlimit: 10;
-      }
+.logmein-1,
+.logmein-2 {
+  stroke: #050606;
+  stroke-miterlimit: 10;
+}
 
-      .logmein-3 {
-        fill: #231f20;
-      }
+.logmein-3 {
+  fill: #231f20;
+}
 
-      .logmein-2 {
-        fill: #6189b6;
-      }
+.logmein-2 {
+  fill: #6189b6;
+}
+
+.newclient-1 {
+  fill: #d9bd8b;
+}
+
+.newclient-1,
+.newclient-2 {
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+}
+
+.newclient-2 {
+  fill: #fff;
+  stroke-width: .25px;
+}
+
 
 
 

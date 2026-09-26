@@ -7,7 +7,7 @@ import { redCheckBox, unCheckedBox, newClient } from './svg';
 class Register {
 
     getCheckBox() {
-       if(this.state.status === 'Register') {
+       if(this.state.status === 'register') {
         return(redCheckBox())
        } else {
         return(unCheckedBox())
@@ -25,7 +25,7 @@ class Register {
         const styles = MyStylesheet();
         const geotech = new Geotech();
         const regularFont = geotech.getRegularFont.call(this)
-        if (this.state.status === 'Register') {
+        if (this.state.status === 'register') {
             return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
 
                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
@@ -59,7 +59,7 @@ class Register {
         const register = new Register();
         const buttonWidth = {width:'50%', maxWidth:'175px'}
 
-        if (this.state.status === 'Register') {
+        if (this.state.status === 'register') {
 
             return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
 

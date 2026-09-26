@@ -193,11 +193,27 @@ class ViewProject extends Component {
         const geotech = new Geotech();
 
         try {
+
+            const myuser = geotech.getUser.call(this)
+            if (!myuser) {
+                throw new Error("There is no user !");
+            }
+
+            const client_id = myuser._id;
+            const { projectid, clientid } = this.props.match.params;
+
+            if (myuser.clientid !== clientid) {
+                throw new Error("User client id does not match url");
+            }
+
+
             const projects = geotech.getProjects.call(this);
-            if (!projects) return;
 
-            const { projectid } = this.props.match.params;
+            if (!projects) {
+                throw new Error("Client has no projects ot save");
+            }
 
+         
             const project = geotech.getProjectByID.call(this, projectid);
             if (!project) throw new Error("Project not found");
 
@@ -213,7 +229,7 @@ class ViewProject extends Component {
                 projectapn: project.projectapn
             };
 
-            const response = await SaveProject(projectid, {
+            const response = await SaveProject(client_id, projectid, {
                 updatedProject
             });
 

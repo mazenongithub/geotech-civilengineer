@@ -9,7 +9,7 @@ export function MyStylesheet() {
             justifyContent: "center",
             alignItems: "center"
         },
-       
+
         alignCenter: {
             textAlign: 'center'
         },
@@ -65,6 +65,11 @@ export function MyStylesheet() {
         showBorder: {
             border: '1px solid'
         },
+        clickable: {
+
+            cursor: `pointer`
+
+        },
         generalField: {
             width: '99%',
             padding: '3px'
@@ -91,17 +96,17 @@ export function MyStylesheet() {
         csiContainer: {
             maxWidth: '400px'
         },
-         width99: {
+        width99: {
             width: '99%'
         },
         width80: {
             width: '80%'
         },
-          width50: {
+        width50: {
             width: '50%'
         },
 
-         width90: {
+        width90: {
             width: '80%'
         },
         addBorderRadius5: {
@@ -177,8 +182,8 @@ export function MyStylesheet() {
         padding10: {
             padding: '10px'
         },
-        padding5:{
-            padding:'5px'
+        padding5: {
+            padding: '5px'
         },
         padding15: {
             padding: '15px'
@@ -186,10 +191,10 @@ export function MyStylesheet() {
         paddingTop15: {
             paddingTop: '15px'
         },
-         paddingLeft15: {
+        paddingLeft15: {
             paddingLeft: '15px'
         },
-         paddingRight15: {
+        paddingRight15: {
             paddingRight: '15px'
         },
         generalPadding: {
@@ -254,13 +259,13 @@ export function MyStylesheet() {
         flex5: {
             flex: 5
         },
-         flex8: {
+        flex8: {
             flex: 8
         },
-          flex12: {
+        flex12: {
             flex: 12
         },
-           flex16: {
+        flex16: {
             flex: 16
         },
         addMargin: {

@@ -495,8 +495,8 @@ export async function UpdateProposal(projectid, proposalid, updateProposal) {
     }
 }
 
-export async function SaveProject(projectid, values) {
-    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/gfk/saveproject/${projectid}`;
+export async function SaveProject(client_id, projectid, values) {
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/${client_id}/saveproject/${projectid}`;
 
     try {
         const response = await fetch(APIURL, {

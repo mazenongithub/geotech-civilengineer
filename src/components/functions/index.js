@@ -17,6 +17,10 @@ export function formatDate(date) {
     });
 };
 
+export function stripProjectID(projectid) {
+    return projectid.substring(projectid.lastIndexOf("-") + 1);
+}
+
 export function formatDateTime(date) {
 
     if (!date) return "";

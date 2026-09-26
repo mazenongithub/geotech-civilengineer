@@ -292,6 +292,36 @@ body {
   stroke-miterlimit: 10;
 }
 
+.touchIcon-1 {
+  fill: none;
+}
+
+.touchIcon-1,
+.touchIcon-2 {
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+  stroke-width: 6px;
+}
+
+.touchIcon-2 {
+  fill: #e7d9b0;
+}
+
+.downicon-1 {
+  fill: #bfbebe;
+  stroke-width: 2px;
+}
+
+.downicon-1,
+.downicon-2 {
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+}
+
+.downicon-2 {
+  fill: #050606;
+}
+
 
 .gotoicon-1 {
   fill: #e7d9b0;

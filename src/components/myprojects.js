@@ -5,8 +5,10 @@ import * as actions from './actions';
 import { connect } from 'react-redux';
 import MakeID from "./makeid";
 import { SaveProjects } from "./actions/api";
-import { gotoIcon, activeIcon, deleteIcon, saveProjectsIcon, saveProfileIcon } from "./svg";
+import { gotoIcon, activeIcon, deleteIcon, saveProjectsIcon, saveProfileIcon, touchIcon, downIcon } from "./svg";
 import { Link } from "react-router-dom"
+import { PROJECTS } from "./actions/types";
+import { stripProjectID } from "./functions";
 class MyProjects extends Component {
     constructor(props) {
         super(props);
@@ -79,6 +81,7 @@ class MyProjects extends Component {
 
         const regularFont = geotech.getRegularFont.call(this)
         const gotoIconWidth = { width: '91px' }
+        const touchIconWidth = { width: '55px' }
         const deleteIconWidth = { width: '30px' }
 
         const activeBackground = (project) => {
@@ -89,30 +92,35 @@ class MyProjects extends Component {
 
         if (user) {
 
-            return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin30 }}>
+            return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin30, ...styles.showBorder, ...styles.padding10, ...styles.addBorderRadius5 }}>
 
 
 
-                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                    <span style={{ ...regularFont, ...activeBackground(project) }} onClick={() => { this.makeProjectActive(project.projectid) }}>{project.title} {project.projectaddress} {project.projectcity} {project.projectapn}</span>
+                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }} onClick={() => { this.makeProjectActive(project.projectid) }}>
+                    <span style={{ ...regularFont, ...activeBackground(project), ...styles.clickable }} >{project.title} {project.projectaddress} {project.projectcity} {project.projectapn} </span>
+                </div>
 
+                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...activeBackground(project) }} onClick={() => { this.makeProjectActive(project.projectid) }}>
+                    <button className={`generalButton`} style={{ ...touchIconWidth }}>{touchIcon()}</button>
+
+                    <span style={{ ...regularFont, ...styles.clickable }}>{this.getActiveMessage()}</span>
                 </div>
 
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont }}>
-                        <Link style={{ ...styles.generalLink }} to={`/projects/${user.clientid}/${project.projectid}`}> <span style={{ ...regularFont }}>Go to Project</span>
-                            <button style={{ ...styles.generalButton, ...gotoIconWidth }}>
-                                {gotoIcon()}
-                            </button>
+
+                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.clickable }}>
+
+                        <Link style={{ ...styles.generalLink }} to={`/projects/${user.clientid}/${project.projectid}`}>
+                            <span style={{ ...regularFont }}> <u>Link to Project ID {stripProjectID(project.projectid)}</u> </span>
                         </Link>
 
                     </div>
 
-                    <div style={{ ...styles.flex1 }}>
+                    <div style={{ ...styles.flex1, ...styles.clickable }}>
 
-                        <span style={{ ...regularFont }}>Delete Project</span>
-                        <button style={{ ...styles.generalButton, ...deleteIconWidth }} onClick={() => { this.deleteProject(project.projectid) }}>
-                            {deleteIcon()}
+
+                        <button className={`generalButton`} style={{ ...deleteIconWidth }} onClick={() => { this.deleteProject(project.projectid) }}>
+                            <span style={{ ...regularFont }}>Delete Project</span>   {deleteIcon()}
                         </button>
 
                     </div>
@@ -195,78 +203,91 @@ class MyProjects extends Component {
         this.setState({ activeprojectid: null });
     }
 
- async saveprojects() {
-    const geotech = new Geotech();
+    async saveprojects() {
+        const geotech = new Geotech();
 
-    try {
-        const projects = geotech.getProjects.call(this) || [];
-        const user = geotech.getUser.call(this);
+        try {
+            const projects = geotech.getProjects.call(this) || [];
+            const user = geotech.getUser.call(this);
 
-        if (!user?._id) {
-            throw new Error("User not loaded");
-        }
+            if (!user?._id) {
+                throw new Error("User not loaded");
+            }
 
-        // Only send database project fields
-        const projectsToSave = projects.map(project => ({
-            projectid: project.projectid,
-            title: project.title,
-            sow: project.sow,
-            clientid: project.clientid,
-            projectaddress: project.projectaddress,
-            projectcity: project.projectcity,
-            projectapn: project.projectapn
-        }));
+            // Only send database project fields
+            const projectsToSave = projects.map(project => ({
+                projectid: project.projectid,
+                title: project.title,
+                sow: project.sow,
+                clientid: project.clientid,
+                projectaddress: project.projectaddress,
+                projectcity: project.projectcity,
+                projectapn: project.projectapn
+            }));
 
-        const response = await SaveProjects(user._id, {
-            projects: projectsToSave
-        });
-
-        if (response?.projects) {
-
-            const updatedProjects = [...projects];
-
-            response.projects.forEach(savedProject => {
-
-                const index = updatedProjects.findIndex(
-                    p => p.projectid === savedProject.projectid
-                );
-
-                if (index !== -1) {
-                    updatedProjects[index] = {
-                        ...updatedProjects[index],
-                        _id:savedProject._id,
-                        projectid: savedProject.projectid,
-                        title: savedProject.title,
-                        sow: savedProject.sow,
-                        clientid: savedProject.clientid,
-                        projectaddress: savedProject.projectaddress,
-                        projectcity: savedProject.projectcity,
-                        projectapn: savedProject.projectapn
-                    };
-                }
-
+            const response = await SaveProjects(user._id, {
+                projects: projectsToSave
             });
 
-            this.props.reduxProjects(updatedProjects);
-        }
+            if (response?.projects) {
 
-        if (response?.message) {
-            this.setState({ message: response.message });
-        }
+                const updatedProjects = [...projects];
 
-    } catch (err) {
-        console.error("Error saving projects:", err);
-        alert(`Error Saving Projects: ${err.message || err}`);
+                response.projects.forEach(savedProject => {
+
+                    const index = updatedProjects.findIndex(
+                        p => p.projectid === savedProject.projectid
+                    );
+
+                    if (index !== -1) {
+                        updatedProjects[index] = {
+                            ...updatedProjects[index],
+                            _id: savedProject._id,
+                            projectid: savedProject.projectid,
+                            title: savedProject.title,
+                            sow: savedProject.sow,
+                            clientid: savedProject.clientid,
+                            projectaddress: savedProject.projectaddress,
+                            projectcity: savedProject.projectcity,
+                            projectapn: savedProject.projectapn
+                        };
+                    }
+
+                });
+
+                this.props.reduxProjects(updatedProjects);
+            }
+
+            if (response?.message) {
+                this.setState({ message: response.message });
+            }
+
+        } catch (err) {
+            console.error("Error saving projects:", err);
+            alert(`Error Saving Projects: ${err.message || err}`);
+        }
     }
-}
 
     getActiveMessage() {
         if (this.state.activeprojectid) {
             const geotech = new Geotech();
             const project = geotech.getProjectByID.call(this, this.state.activeprojectid)
-            return (`Project ${project.title}, is active, when you are done editing, press save, touch again when finished.`)
+            return (`Project ${project.title}, is active, touch when finished.`)
         } else {
-            return ('To edit a project, touch a projectID to make active. Touch again when finished.')
+            return ('Touch ProjectID to make active.')
+        }
+    }
+
+    headerMessage() {
+        const geotech = new Geotech();
+        let message = ``
+        if (!this.state.activeprojectid) {
+            return (`There is no active project, create a project by typing in any field, press Save Projects when done`)
+        } else {
+
+            const project = geotech.getProjectByID.call(this, this.state.activeprojectid)
+
+             return (`Active Project Title is  ${project.title}, update the project fields then press Save Projects, Project is active`)
         }
     }
 
@@ -277,29 +298,55 @@ class MyProjects extends Component {
         const regularFont = geotech.getRegularFont.call(this)
         const myuser = geotech.getUser.call(this)
         const saveIconWidth = this.state.width > 768 ? { width: '200px' } : { width: '150px' }
+        const downIconWidth = { width: '5em' }
+
         if (myuser) {
             return (<div style={{ ...styles.generalContainer, ...styles.marginLeft15 }}>
                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                     <Link to={`/projects/${myuser.clientid}`} style={{ ...headerFont, ...styles.boldFont, ...styles.generalLink }}>/Projects</Link>
                 </div>
+
+
                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                    <span style={{ ...regularFont }}>To create a project simply begin typing in one of the fields</span>
+                    <span style={{ ...regularFont }}>{this.headerMessage()}</span>
                 </div>
 
 
-                <div style={{ ...styles.generalFont, ...styles.bottomMargin15 }}>
+                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
                     <span style={{ ...regularFont }}>Project Title</span>
+                    <span
+                        style={{
+                            display: 'inline-block',
+                            width: '2em',
+                            textAlign: 'center',
+                            marginLeft: '1em'
+                        }}
+                    >
+                        {downIcon()}
+                    </span>
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                    <input type="text" style={{ ...styles.generalField, ...regularFont }}
+                    <input type="text" style={{ ...styles.width90, ...regularFont }}
                         value={this.getProjectValue("title")}
                         onChange={event => { this.setProjectValue("title", event.target.value) }} />
 
+
+
                 </div>
 
-                <div style={{ ...styles.generalFont, ...styles.bottomMargin15, ...styles.bottomMargin15 }}>
-                    <span style={{ ...regularFont }}>Project Summary</span>
+                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                    <span style={{ ...regularFont }}>Scope of Work</span>
+                    <span
+                        style={{
+                            display: 'inline-block',
+                            width: '2em',
+                            textAlign: 'center',
+                            marginLeft: '1em'
+                        }}
+                    >
+                        {downIcon()}
+                    </span>
                 </div>
 
                 <div style={{ ...styles.generalContainer }}>
@@ -308,7 +355,7 @@ class MyProjects extends Component {
 
                         value={this.getProjectValue("sow")}
                         onChange={event => { this.setProjectValue("sow", event.target.value) }}
-                        placeholder="Write a brief summary of your project..."
+                        placeholder="Create a Scope of Work for your project..."
                         style={{
                             width: "100%",
                             minHeight: "120px", // ~6 lines
@@ -330,7 +377,19 @@ class MyProjects extends Component {
 
 
                 <div style={{ ...styles.generalFont, ...styles.bottomMargin15 }}>
-                    <span style={{ ...regularFont }}>Address</span>
+                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                        <span style={{ ...regularFont }}>Project Address</span>
+                        <span
+                            style={{
+                                display: 'inline-block',
+                                width: '2em',
+                                textAlign: 'center',
+                                marginLeft: '1em'
+                            }}
+                        >
+                            {downIcon()}
+                        </span>
+                    </div>
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
@@ -341,8 +400,18 @@ class MyProjects extends Component {
                 </div>
 
 
-                <div style={{ ...styles.generalFont, ...styles.bottomMargin15 }}>
-                    <span style={{ ...regularFont }}>City</span>
+                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                    <span style={{ ...regularFont }}>Project City</span>
+                    <span
+                        style={{
+                            display: 'inline-block',
+                            width: '2em',
+                            textAlign: 'center',
+                            marginLeft: '1em'
+                        }}
+                    >
+                        {downIcon()}
+                    </span>
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
@@ -353,8 +422,18 @@ class MyProjects extends Component {
                 </div>
 
 
-                <div style={{ ...styles.generalFont, ...styles.bottomMargin15 }}>
-                    <span style={{ ...regularFont }}>Parcel APN</span>
+                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                    <span style={{ ...regularFont }}>Parcel APN ?</span>
+                    <span
+                        style={{
+                            display: 'inline-block',
+                            width: '2em',
+                            textAlign: 'center',
+                            marginLeft: '1em'
+                        }}
+                    >
+                        {downIcon()}
+                    </span>
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
@@ -365,7 +444,7 @@ class MyProjects extends Component {
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
-                    <button  className={`generalButton projectsButton`} style={{ ...saveIconWidth }} onClick={() => { this.saveprojects() }}>{saveProjectsIcon()}</button>
+                    <button className={`generalButton`} style={{ ...saveIconWidth }} onClick={() => { this.saveprojects() }}>{saveProjectsIcon()}</button>
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter, ...styles.generalFont }}>
@@ -377,9 +456,7 @@ class MyProjects extends Component {
                     <span style={{ ...regularFont }}><u>My Projects</u></span>
                 </div>
 
-                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
-                    <span style={{ ...regularFont }}>{this.getActiveMessage()}</span>
-                </div>
+
 
                 {this.showActiveProject()}
 

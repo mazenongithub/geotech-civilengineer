@@ -69,6 +69,8 @@ class Geotech {
         return invoices.find(invoice => invoice.invoiceid === invoiceid) || null;
     }
 
+  
+
     getInvoiceLineItems(projectid, invoiceid) {
         const geotech = new Geotech();
 

@@ -15,7 +15,7 @@ import EmailLogin from './emaillogin'
 class Login extends Component {
     constructor(props) {
         super(props)
-        this.state = { firstname: "", lastname: "", emailaddress: "", profileurl: "", phonenumber: "", apple: "", clientid: '', google: '', status: '', register: `` }
+        this.state = { firstname: "", lastname: "", emailaddress: "", profileurl: "", phonenumber: "", clientid: '', authToken: '', status: '', register: `` }
     }
 
     resetState() {
@@ -39,48 +39,42 @@ class Login extends Component {
 
 
 
-
-
         try {
 
             const result = await signInWithPopup(auth, appleProvider);
-            let firstname = "";
-            let lastname = "";
-            let emailaddress = "";
-            let profileurl = "";
-            let phonenumber = "";
-            let user = {}
-            let apple = "";
+
 
             if (result.hasOwnProperty("user")) {
 
-                user = result.user;
-                apple = user.providerData[0].uid;
+                const getuser = result.user;
+                const authToken = await getuser.getIdToken();
+                const displayName = getuser.displayName || '';
+                const nameParts = displayName.trim()
+                    ? displayName.trim().split(/\s+/)
+                    : [];
+                const firstname = nameParts[0] || '';
+                const lastname = nameParts.slice(1).join(' ') || '';
+                const emailaddress = getuser.providerData[0].email
+                const profileurl = getuser.providerData[0].photoURL
+                const phonenumber = getuser.phoneNumber;
 
 
-                if (user.providerData[0].displayName) {
-                    firstname = user.providerData[0].displayName.split(' ')[0]
-                    lastname = user.providerData[0].displayName.split(' ')[1]
-                }
+                this.setState(
+                    { firstname, lastname, emailaddress, profileurl, phonenumber, authToken },
+                    () => {
+                        this.clientLogin(); // runs AFTER state updates
+                    }
+                );
 
-                emailaddress = user.providerData[0].email
-                profileurl = user.providerData[0].photoURL
-                phonenumber = user.phoneNumber;
+
+
             }
-
-            this.setState(
-                { firstname, lastname, emailaddress, profileurl, phonenumber, apple },
-                () => {
-                    this.clientLogin(); // runs AFTER state updates
-                }
-            );
 
         } catch (err) {
             alert(err)
         }
 
     }
-
 
 
     async handleGoogleLogin() {
@@ -91,36 +85,33 @@ class Login extends Component {
 
         try {
 
-            let google = "";
-            let firstname = "";
-            let lastname = "";
-            let emailaddress = "";
-            let profileurl = "";
-            let phonenumber = "";
-            let user = {}
 
 
             const result = await signInWithPopup(auth, googleProvider);
 
             if (result.hasOwnProperty("user")) {
+                const getuser = result.user;
+                const authToken = await getuser.getIdToken();
+                const displayName = getuser.displayName || '';
+                const nameParts = displayName.trim()
+                    ? displayName.trim().split(/\s+/)
+                    : [];
+                const firstname = nameParts[0] || '';
+                const lastname = nameParts.slice(1).join(' ') || '';
+                const emailaddress = getuser.providerData[0].email
+                const profileurl = getuser.providerData[0].photoURL
+                const phonenumber = getuser.phoneNumber;
 
-                user = result.user;
-                google = user.providerData[0].uid;
 
-                firstname = user.providerData[0].displayName.split(' ')[0]
-                lastname = user.providerData[0].displayName.split(' ')[1]
-                emailaddress = user.providerData[0].email
-                profileurl = user.providerData[0].photoURL
-                phonenumber = user.phoneNumber;
+
+                this.setState(
+                    { firstname, lastname, emailaddress, profileurl, phonenumber, authToken },
+                    () => {
+                        this.clientLogin(); // runs AFTER state updates
+                    }
+                );
 
             }
-
-            this.setState(
-                { firstname, lastname, emailaddress, profileurl, phonenumber, google },
-                () => {
-                    this.clientLogin(); // runs AFTER state updates
-                }
-            );
 
 
         } catch (error) {
@@ -131,46 +122,34 @@ class Login extends Component {
     }
 
     async clientLogin() {
-        const { firstname, lastname, emailaddress, profileurl, phonenumber, apple, google, clientid } = this.state;
+        const { firstname, lastname, emailaddress, profileurl, phonenumber, authToken } = this.state;
 
-        const values = { firstname, lastname, emailaddress, profileurl, phonenumber, apple, google, clientid };
+        const values = { firstname, lastname, emailaddress, profileurl, phonenumber, authToken };
 
 
         try {
             const response = await LoginUser(values);
 
+            if (response.status === 'served') {
 
-            // 1️⃣ Update Redux with user and projects
-            if (response.client) {
+                // 1️⃣ Update Redux with user and projects
+                if (response.client) {
 
-                this.props.reduxUser(response.client); // was 'response.engineer'? Changed to 'client'
+                    this.props.reduxUser(response.client); // was 'response.engineer'? Changed to 'client'
 
-                if (response.projects) {
-                    this.props.reduxProjects(response.projects);
-                }
+                    if (response.projects) {
+                        this.props.reduxProjects(response.projects);
+                    }
 
-                this.resetState()
+                    this.resetState()
 
-            }
-
-
-
-            if (response.status === 'Register') {
-
-
-
-                let apple = "";
-                let google = "";
-                if (response.provider === 'apple') {
-                    apple = response.providerId
-
-                } else if (response.provider === 'google') {
-                    google = response.providerId;
                 }
 
 
+            } else if (response.status === 'register') {
 
-                this.setState({ status: 'Register', register: response.register, clientid: '', apple, google })
+
+                this.setState({ status: 'register', register: response.register })
             }
 
             // 2️⃣ No need for setState hack; Redux should trigger re-render
@@ -185,15 +164,15 @@ class Login extends Component {
 
 
         try {
-            let { client_id, clientid, emailaddress, apple, google } = this.state;
-            let values = { client_id, clientid, emailaddress, apple, google }
+            let { firstname, lastname, emailaddress, profileurl, phonenumber, authToken, clientid } = this.state;
+            let values = { firstname, lastname, emailaddress, profileurl, phonenumber, authToken, clientid }
             let createClient = await CreateClient(values)
 
             if (createClient.newClient) {
-                const { client_id, clientid, emailaddress, apple, google } = createClient.newClient
+
                 const status = createClient.status;
                 this.props.reduxUser(createClient.newClient)
-                this.setState({ client_id, clientid, emailaddress, apple, google, status })
+                this.resetState()
 
             }
 
@@ -215,14 +194,14 @@ class Login extends Component {
 
             <div className="login-container">
 
-              
+
                 <div className="login-box">
 
-                      <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
-                    <h2 style={{ ...regularFont }}>Login with:</h2>
-                </div>
+                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
+                        <h2 style={{ ...regularFont }}>Login with:</h2>
+                    </div>
 
-                   
+
 
 
 

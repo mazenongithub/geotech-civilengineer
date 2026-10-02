@@ -443,6 +443,32 @@ export async function GetSummary(projectid) {
     }
 }
 
+export async function DeleteProject(projectid) {
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/deleteproject/${projectid}`;
+
+    try {
+        const resp = await fetch(APIURL, { credentials: 'include' });
+
+        if (!resp.ok) {
+            // Try to extract server error message if available
+            const errorData = await resp.json().catch(() => ({}));
+            console.log(errorData)
+            const message =
+                errorData?.Error ||
+                (resp.status >= 400 && resp.status < 500
+                    ? 'Client error while loading project.'
+                    : 'Please try again later, server is not responding.');
+            throw new Error(message);
+        }
+
+        return await resp.json();
+    } catch (err) {
+        console.error('❌ Error loading project:', err);
+        throw err;
+    }
+
+}
+
 
 export async function LoadProject(projectid) {
     const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/${projectid}/loadproject`;

@@ -69,7 +69,34 @@ class Geotech {
         return invoices.find(invoice => invoice.invoiceid === invoiceid) || null;
     }
 
-  
+ validateProjectDeletion(projectid) {
+    const geotech = new Geotech();
+    const project = geotech.getProjectByID.call(this, projectid);
+
+    if (!project) {
+        throw new Error('Project not found');
+    }
+
+    const protectedProperties = [
+        'borings',
+        'fieldreports',
+        'compactioncurves',
+        'seismic',
+        'ptslab',
+        'slope',
+        'timesheet',
+        'schedule'
+    ];
+
+    const populatedProperties = protectedProperties.filter(property =>
+        Array.isArray(project[property]) && project[property].length > 0
+    );
+
+    return {
+        canDelete: populatedProperties.length === 0,
+        populatedProperties
+    };
+}
 
     getInvoiceLineItems(projectid, invoiceid) {
         const geotech = new Geotech();

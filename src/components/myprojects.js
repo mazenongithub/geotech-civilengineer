@@ -4,7 +4,7 @@ import Geotech from "./geotech";
 import * as actions from './actions';
 import { connect } from 'react-redux';
 import MakeID from "./makeid";
-import { SaveProjects } from "./actions/api";
+import { DeleteProject, SaveProjects } from "./actions/api";
 import { gotoIcon, activeIcon, deleteIcon, saveProjectsIcon, saveProfileIcon, touchIcon, downIcon } from "./svg";
 import { Link } from "react-router-dom"
 import { PROJECTS } from "./actions/types";
@@ -57,21 +57,50 @@ class MyProjects extends Component {
     }
 
     showActiveProject() {
-        const activeIconWidth = { width: '48px' }
+        const activeIconWidth = { width: '48px' };
         const geotech = new Geotech();
         const styles = MyStylesheet();
 
-        const projectid = this.state.activeprojectid
+        const projectid = this.state.activeprojectid;
 
-        const regularFont = geotech.getRegularFont.call(this)
-        if (projectid) {
-            const project = geotech.getProjectByID.call(this, projectid)
-            return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                <button style={{ ...styles.generalButton, ...activeIconWidth }} onClick={() => { this.makeProjectActive('') }}>{activeIcon()}</button>
-                <span style={{ ...regularFont }}>Active Project is {project.title} </span>
-            </div>)
-
+        if (!projectid) {
+            return null;
         }
+
+        const project = geotech.getProjectByID.call(this, projectid);
+
+        // Project no longer exists
+        if (!project) {
+            return null;
+        }
+
+        const regularFont = geotech.getRegularFont.call(this);
+
+        return (
+            <div
+                style={{
+                    ...styles.generalContainer,
+                    ...styles.generalFont,
+                    ...styles.bottomMargin15
+                }}
+            >
+                <button
+                    style={{
+                        ...styles.generalButton,
+                        ...activeIconWidth
+                    }}
+                    onClick={() => {
+                        this.makeProjectActive('');
+                    }}
+                >
+                    {activeIcon()}
+                </button>
+
+                <span style={regularFont}>
+                    Active Project is {project.title}
+                </span>
+            </div>
+        );
     }
 
     showProjectID(project) {
@@ -187,20 +216,33 @@ class MyProjects extends Component {
         this.setState(prev => ({ ...prev }));
     }
 
-    deleteProject(projectid) {
+    async deleteProject(projectid) {
         const geotech = new Geotech();
-        const projects = geotech.getProjects.call(this) || [];
 
-        const index = geotech.getProjectKeyByID.call(this, projectid);
-        if (index === null || index === -1) return;
+        try {
+            const result = await DeleteProject(projectid);
 
-        const updatedProjects = projects.filter(
-            project => project.projectid !== projectid
-        );
+            if (!result.success) {
+                alert(result.Error || "Could not delete project");
+                return;
+            }
 
-        this.props.reduxProjects(updatedProjects);
+            const projects = geotech.getProjects.call(this) || [];
 
-        this.setState({ activeprojectid: null });
+            const updatedProjects = projects.filter(
+                project => project.projectid !== projectid
+            );
+
+            this.props.reduxProjects(updatedProjects);
+
+            this.setState({
+                activeprojectid: null
+            });
+
+        } catch (err) {
+            console.error(err);
+            alert(`Could not delete project: ${err.message}`);
+        }
     }
 
     async saveprojects() {
@@ -242,7 +284,6 @@ class MyProjects extends Component {
                     if (index !== -1) {
                         updatedProjects[index] = {
                             ...updatedProjects[index],
-                            _id: savedProject._id,
                             projectid: savedProject.projectid,
                             title: savedProject.title,
                             sow: savedProject.sow,
@@ -269,26 +310,41 @@ class MyProjects extends Component {
     }
 
     getActiveMessage() {
-        if (this.state.activeprojectid) {
-            const geotech = new Geotech();
-            const project = geotech.getProjectByID.call(this, this.state.activeprojectid)
-            return (`Project ${project.title}, is active, touch when finished.`)
-        } else {
-            return ('Touch ProjectID to make active.')
+        if (!this.state.activeprojectid) {
+            return 'Touch ProjectID to make active.';
         }
+
+        const geotech = new Geotech();
+
+        const project = geotech.getProjectByID.call(
+            this,
+            this.state.activeprojectid
+        );
+
+        if (!project) {
+            return 'Touch ProjectID to make active.';
+        }
+
+        return `Project ${project.title}, is active, touch when finished.`;
     }
 
     headerMessage() {
         const geotech = new Geotech();
-        let message = ``
+
         if (!this.state.activeprojectid) {
-            return (`There is no active project, create a project by typing in any field, press Save Projects when done`)
-        } else {
-
-            const project = geotech.getProjectByID.call(this, this.state.activeprojectid)
-
-             return (`Active Project Title is  ${project.title}, update the project fields then press Save Projects, Project is active`)
+            return "There is no active project, create a project by typing in any field, press Save Projects when done";
         }
+
+        const project = geotech.getProjectByID.call(
+            this,
+            this.state.activeprojectid
+        );
+
+        if (!project) {
+            return "There is no active project, create a project by typing in any field, press Save Projects when done";
+        }
+
+        return `Active Project Title is ${project.title}, update the project fields then press Save Projects, Project is active`;
     }
 
     render() {

@@ -354,10 +354,11 @@ class Profile extends Component {
     getProfilePhoto() {
         const geotech = new Geotech();
         const myuser = geotech.getUser.call(this);
-        const profilePhoto = this.state.width > 768 ? { width: '40%' } : { width: '50%' }
+        const profilePhoto = this.state.width > 768 ? { width: '20%' } : { width: '35%' }
+        const styles = MyStylesheet();
 
         return myuser?.profileurl
-            ? <img src={`${process.env.REACT_APP_SERVER_API}${myuser.profileurl}`} style={{ ...profilePhoto }} alt="Profile" />
+            ? <img src={`${process.env.REACT_APP_SERVER_API}${myuser.profileurl}`} style={{ ...profilePhoto, ...styles.showBorder }} alt="Profile" />
             : defaultProfilePhoto();
     }
 
@@ -370,21 +371,27 @@ class Profile extends Component {
         const saveprofile = this.state.width > 768 ? { width: '200px' } : { width: '150px' }
         const geotech = new Geotech();
         const regularFont = geotech.getRegularFont.call(this)
-        return (<div style={{ ...styles.generalContainer }}>
+        const myuser = geotech.getUser.call(this)
+        if(myuser) {
+        return (<div style={{ ...styles.width90marginAuto, ...styles.generalContainer }}>
 
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15, ...styles.alignCenter }}>
-                <input type="text" style={{ ...regularFont, ...styles.width50 }}
+              <span style={{ ...regularFont }}>ClientID/</span>  <input type="text" style={{ ...regularFont, ...styles.width50 }}
                     value={this.getValue('clientid')}
                     onChange={event => { this.setValue("clientid", event.target.value) }} />
-                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.alignCenter }}>
-                    <span style={{ ...regularFont }}>ClientID</span>
-                </div>
+               
 
 
             </div>
 
-            <div style={{ ...styles.generalContainer, ...profilePhoto, ...styles.marginAuto, ...styles.bottomMargin15 }}>
+            
+
+            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.generalFont}}>
                 {this.getProfilePhoto()}
+               
+            </div>
+            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.generalFont}}>
+                <span style={{...regularFont}}>Profile URL: {myuser.profileurl}</span>
             </div>
 
 
@@ -442,6 +449,16 @@ class Profile extends Component {
 
 
         </div>)
+
+
+        } else {
+
+              <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.generalFont }}>
+                <span style={{ ...regularFont }}>No User </span>
+            </div>
+
+
+        }
     }
 }
 function mapStateToProps(state) {

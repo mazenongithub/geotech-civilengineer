@@ -70,6 +70,11 @@ export function MyStylesheet() {
             cursor: `pointer`
 
         },
+        width90marginAuto: {
+            width: '95%',
+            margin:'auto'
+
+        },
         generalField: {
             width: '99%',
             padding: '3px'

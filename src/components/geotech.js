@@ -69,34 +69,46 @@ class Geotech {
         return invoices.find(invoice => invoice.invoiceid === invoiceid) || null;
     }
 
- validateProjectDeletion(projectid) {
-    const geotech = new Geotech();
-    const project = geotech.getProjectByID.call(this, projectid);
-
-    if (!project) {
-        throw new Error('Project not found');
+    getEngineers() {
+        return this.props.gfk?.engineers || [];
     }
 
-    const protectedProperties = [
-        'borings',
-        'fieldreports',
-        'compactioncurves',
-        'seismic',
-        'ptslab',
-        'slope',
-        'timesheet',
-        'schedule'
-    ];
+    getEngineerByID(engineer_id) {
+        const geotech = new Geotech();
+        const engineers = geotech.getEngineers.call(this) || [];
+        return engineers.find(engineer => engineer.engineer_id === engineer_id) || null;
+    }
 
-    const populatedProperties = protectedProperties.filter(property =>
-        Array.isArray(project[property]) && project[property].length > 0
-    );
 
-    return {
-        canDelete: populatedProperties.length === 0,
-        populatedProperties
-    };
-}
+
+    validateProjectDeletion(projectid) {
+        const geotech = new Geotech();
+        const project = geotech.getProjectByID.call(this, projectid);
+
+        if (!project) {
+            throw new Error('Project not found');
+        }
+
+        const protectedProperties = [
+            'borings',
+            'fieldreports',
+            'compactioncurves',
+            'seismic',
+            'ptslab',
+            'slope',
+            'timesheet',
+            'schedule'
+        ];
+
+        const populatedProperties = protectedProperties.filter(property =>
+            Array.isArray(project[property]) && project[property].length > 0
+        );
+
+        return {
+            canDelete: populatedProperties.length === 0,
+            populatedProperties
+        };
+    }
 
     getInvoiceLineItems(projectid, invoiceid) {
         const geotech = new Geotech();

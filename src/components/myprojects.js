@@ -148,7 +148,7 @@ class MyProjects extends Component {
                     <div style={{ ...styles.flex1, ...styles.clickable }}>
 
 
-                        <button className={`generalButton`} style={{ ...deleteIconWidth }} onClick={() => { this.deleteProject(project.projectid) }}>
+                        <button className={`generalButton`} style={{ ...deleteIconWidth }} onClick={() => { this.deleteProject(user._id, project.projectid) }}>
                             <span style={{ ...regularFont }}>Delete Project</span>   {deleteIcon()}
                         </button>
 
@@ -216,11 +216,11 @@ class MyProjects extends Component {
         this.setState(prev => ({ ...prev }));
     }
 
-    async deleteProject(projectid) {
+    async deleteProject(client_id, projectid) {
         const geotech = new Geotech();
 
         try {
-            const result = await DeleteProject(projectid);
+            const result = await DeleteProject(client_id, projectid);
 
             if (!result.success) {
                 alert(result.Error || "Could not delete project");

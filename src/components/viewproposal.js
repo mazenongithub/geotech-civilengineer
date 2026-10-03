@@ -245,11 +245,12 @@ class ViewProposal extends Component {
                 style={{
                     ...styles.generalContainer,
                     ...styles.bottomMargin15,
-                    ...styles.generalFont
+                    ...styles.generalFont,
+                    ...styles.alignCenter
                 }}
             >
                 <span style={regularFont}>
-                    Please submit payment for the total amount of: $
+                    Proposed Scheduled Amount Total is: $
                     {total.toFixed(2)}
                 </span>
             </div>
@@ -284,6 +285,7 @@ class ViewProposal extends Component {
         try {
 
             const response = await UpdateProposal(
+                client_id,
                 projectid,
                 proposalid,
                 updatedProposal
@@ -376,10 +378,37 @@ class ViewProposal extends Component {
         this.setState({ render: 'render' })
     }
 
+    
+    getDateUpdated() {
+        const dateupdated = this.getProposalValue("dateproposal");
+
+        return dateupdated ? formatDateTime(dateupdated) : "";
+    }
+
+    getUpdatedBy() {
+        const geotech = new Geotech();
+
+        const updatedby = this.getProposalValue("updatedby");
+
+
+        if (!updatedby) {
+            return "";
+        }
+
+        const engineer = geotech.getEngineerByID.call(this, updatedby);
+
+        if (engineer) {
+            return  `${engineer.firstname} ${engineer.lastname}`;
+        }
+
+        return updatedby;
+    }
+
+
     getDateApproved() {
         const dateapproved = this.getProposalValue("dateapproved");
 
-        return dateapproved ? `Approved on: ${formatDateTime(dateapproved)}` : "";
+        return dateapproved ?  formatDateTime(dateapproved) : "";
     }
 
     getApprovedBy() {
@@ -394,7 +423,7 @@ class ViewProposal extends Component {
         const user = geotech.getUser.call(this);
 
         if (user && user._id === approvedby) {
-            return `Approved By: ${user.firstname} ${user.lastname}`;
+            return `${user.firstname} ${user.lastname}`;
         }
 
         return approvedby;
@@ -539,12 +568,22 @@ class ViewProposal extends Component {
                     <button className="generalButton authButton" style={{  ...buttonWidth }} onClick={() => { this.updateProposal() }}>{authorize()}</button>
                 </div>
 
-                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }}>
+                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }}>
                     <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                        <span style={{ ...regularFont }}>{this.getDateApproved()}</span>
+                        <span style={{ ...regularFont }}>Date Updated: {this.getDateUpdated()}</span>
                     </div>
                     <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                        <span style={{ ...regularFont }}>{this.getApprovedBy()}</span>
+                        <span style={{ ...regularFont }}>Updated By: {this.getUpdatedBy()}</span>
+
+                    </div>
+                </div>
+
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }}>
+                    <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                        <span style={{ ...regularFont }}>Date Approved: {this.getDateApproved()}</span>
+                    </div>
+                    <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                        <span style={{ ...regularFont }}>Approved By: {this.getApprovedBy()}</span>
 
                     </div>
                 </div>
@@ -560,6 +599,7 @@ function mapStateToProps(state) {
     return {
         myuser: state.myuser,
         projects: state.projects,
+        gfk:state.gfk
     }
 }
 export default connect(mapStateToProps, actions)(ViewProposal)

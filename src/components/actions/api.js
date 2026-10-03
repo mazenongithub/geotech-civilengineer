@@ -443,8 +443,8 @@ export async function GetSummary(projectid) {
     }
 }
 
-export async function DeleteProject(projectid) {
-    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/deleteproject/${projectid}`;
+export async function DeleteProject(client_id, projectid) {
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/${client_id}/deleteproject/${projectid}`;
 
     try {
         const resp = await fetch(APIURL, { credentials: 'include' });
@@ -494,8 +494,8 @@ export async function LoadProject(projectid) {
     }
 }
 
-export async function UpdateProposal(projectid, proposalid, updateProposal) {
-    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/${projectid}/approveproposal/${proposalid}`;
+export async function UpdateProposal(client_id, projectid, proposalid, updateProposal) {
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/${client_id}/project/${projectid}/approveproposal/${proposalid}`;
 
     try {
         const response = await fetch(APIURL, {

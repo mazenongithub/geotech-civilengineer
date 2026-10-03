@@ -47,6 +47,14 @@ class App extends Component {
         console.warn("⚠️ No client returned.");
       }
 
+      // Load GFK
+
+      if(response?.engineers) {
+        this.props.reduxGFK({engineers:response.engineers})
+      }  else {
+        console.warn("⚠️ No Engineers Found ");
+      }
+
       // 2️⃣ Update Redux with projects if available
       if (Array.isArray(response?.projects) && response.projects.length > 0) {
         this.props.reduxProjects(response.projects);

@@ -1,4 +1,4 @@
-import { MYUSER, PROJECTS } from './types';
+import { MYUSER, PROJECTS, GFK } from './types';
 
 export const reduxUser = (myuser) => async dispatch => {
 
@@ -8,4 +8,9 @@ export const reduxUser = (myuser) => async dispatch => {
 export const reduxProjects = (projects) => async dispatch => {
 
     dispatch({ type: PROJECTS, payload: projects})
+}
+
+export const reduxGFK = (gfk) => async dispatch => {
+
+    dispatch({ type: GFK, payload: gfk})
 }

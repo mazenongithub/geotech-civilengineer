@@ -17,6 +17,7 @@ import ViewInvoice from './viewinvoice'
 import Payments from './payments'
 import Proposals from './proposals'
 import ViewProposal from './viewproposal'
+
 class ViewProject extends Component {
 
     constructor(props) {
@@ -26,8 +27,10 @@ class ViewProject extends Component {
     }
 
     async componentDidMount() {
+
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+        const geotech = new Geotech();
 
         const { projects } = this.props;
 
@@ -55,7 +58,52 @@ class ViewProject extends Component {
         socket.onmessage = (evt) => {
             console.log("message received");
             console.log("message:", evt.data);
-        }
+
+            try {
+                const message = typeof evt.data === 'string'
+                    ? JSON.parse(evt.data)
+                    : evt.data;
+
+                const { type, updatedSchedule } = message;
+
+                switch (type) {
+
+                    case "updatedschedule-gfk": {
+
+                        const projects = geotech.getProjects.call(this);
+                        const project = geotech.getProjectByID.call(this, projectid);
+
+                        if (!project) {
+                            return;
+                        }
+
+                        const i = geotech.getProjectKeyByID.call(this, projectid);
+
+                        if (i === -1 || !projects[i]) {
+                            return;
+                        }
+
+                        projects[i].schedule.costs = updatedSchedule.costs;
+                        projects[i].schedule.labor = updatedSchedule.labor;
+                        projects[i].schedule.proposals = updatedSchedule.proposals;
+
+                        this.props.reduxProjects(projects);
+
+                        this.setState({
+                            render: 'render'
+                        });
+
+                        break;
+                    }
+
+                    default:
+                        return;
+                }
+
+            } catch (err) {
+                console.error("Error processing socket message:", err);
+            }
+        };
 
         socket.onerror = (evt) => {
             console.log("SOMETHING WENT WRONG!");
@@ -213,7 +261,7 @@ class ViewProject extends Component {
                 throw new Error("Client has no projects ot save");
             }
 
-         
+
             const project = geotech.getProjectByID.call(this, projectid);
             if (!project) throw new Error("Project not found");
 

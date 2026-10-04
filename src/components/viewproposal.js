@@ -263,67 +263,76 @@ class ViewProposal extends Component {
 
         const { projectid, proposalid } = this.props.match.params;
 
-        const user = geotech.getUser.call(this);
-        const client_id = user._id;
+        const getproject = geotech.getProjectByID.call(this, projectid)
 
-        // Get the proposal
-        const proposal = geotech.getProposalByID.call(this, projectid, proposalid);
+       if(window.confirm(`Are you sure you want to authorize the proposal send for project ${getproject.title}?`)) {
+            const user = geotech.getUser.call(this)
+            const client_id = user._id;
+           
+            // Get the proposal
+            const proposal = geotech.getProposalByID.call(this, projectid, proposalid);
 
-        if (!proposal) {
-            alert("Proposal not found.");
-            return;
-        }
-
-        // Create an updated copy
-        const updatedProposal = {
-            ...proposal,
-            approvedby: client_id,
-            status: "Approved",
-            dateapproved: new Date()
-        };
-
-        try {
-
-            const response = await UpdateProposal(
-                client_id,
-                projectid,
-                proposalid,
-                updatedProposal
-            );
-
-            const projects = [...this.props.projects];
-
-            const projectIndex = geotech.getProjectKeyByID.call(this, projectid);
-            const proposalIndex = geotech.getProposalIndexByID.call(this, projectid, proposalid);
-
-            if (projectIndex !== null && proposalIndex !== null) {
-
-                projects[projectIndex].schedule.proposals[proposalIndex] = response.proposal;
-
-                this.props.reduxProjects(projects);
-
-                this.setState({
-                    render: "render"
-                });
-
-
-                if (
-                this.props.socket &&
-                this.props.socket.readyState === WebSocket.OPEN
-            ) {
-                this.props.socket.send(JSON.stringify({
-                    type: "viewproposal-client",
-                    message: "proposal updated",
-                    updatedProposal: response.proposal
-                }));
+            if (!proposal) {
+                alert("Proposal not found.");
+                return;
             }
 
+            // Create an updated copy
+            const updatedProposal = {
+                ...proposal,
+                approvedby: client_id,
+                status: "Approved",
+                dateapproved: new Date()
+            };
+
+            try {
+
+                const response = await UpdateProposal(
+                    client_id,
+                    projectid,
+                    proposalid,
+                    updatedProposal
+                );
+
+                const projects = [...this.props.projects];
+
+                const projectIndex = geotech.getProjectKeyByID.call(this, projectid);
+                const proposalIndex = geotech.getProposalIndexByID.call(this, projectid, proposalid);
+
+                if (projectIndex !== null && proposalIndex !== null) {
+
+                    projects[projectIndex].schedule.proposals[proposalIndex] = response.proposal;
+
+                    this.props.reduxProjects(projects);
+
+                    this.setState({
+                        render: "render"
+                    });
+
+
+                    if (
+                        this.props.socket &&
+                        this.props.socket.readyState === WebSocket.OPEN
+                    ) {
+                        this.props.socket.send(JSON.stringify({
+                            type: "viewproposal-client",
+                            message: "proposal updated",
+                            updatedProposal: response.proposal
+                        }));
+                    }
+
+                }
+
+
+
+
+
+
+            } catch (err) {
+
+                alert(`Could not update proposal: ${err.message}`);
+
             }
-
-
-        } catch (err) {
-
-            alert(`Could not update proposal: ${err.message}`);
 
         }
 
@@ -378,7 +387,7 @@ class ViewProposal extends Component {
         this.setState({ render: 'render' })
     }
 
-    
+
     getDateUpdated() {
         const dateupdated = this.getProposalValue("dateproposal");
 
@@ -398,7 +407,7 @@ class ViewProposal extends Component {
         const engineer = geotech.getEngineerByID.call(this, updatedby);
 
         if (engineer) {
-            return  `${engineer.firstname} ${engineer.lastname}`;
+            return `${engineer.firstname} ${engineer.lastname}`;
         }
 
         return updatedby;
@@ -408,7 +417,7 @@ class ViewProposal extends Component {
     getDateApproved() {
         const dateapproved = this.getProposalValue("dateapproved");
 
-        return dateapproved ?  formatDateTime(dateapproved) : "";
+        return dateapproved ? formatDateTime(dateapproved) : "";
     }
 
     getApprovedBy() {
@@ -557,7 +566,7 @@ class ViewProposal extends Component {
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                    <button  className={`generalButton`} style={{  ...iconWidth }} onClick={() => { this.downloadProposal() }}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
+                    <button className={`generalButton`} style={{ ...iconWidth }} onClick={() => { this.downloadProposal() }}>{clickToDownload()}  </button> <span style={{ ...regularFont, ...styles.generalFont }}>Click to Download</span>
                 </div>
 
                 {this.showLineItems()}
@@ -565,10 +574,10 @@ class ViewProposal extends Component {
                 {this.showTotal()}
 
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
-                    <button className="generalButton authButton" style={{  ...buttonWidth }} onClick={() => { this.updateProposal() }}>{authorize()}</button>
+                    <button className="generalButton" style={{ ...buttonWidth }} onClick={() => { this.updateProposal() }}>{authorize()}</button>
                 </div>
 
-                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }}>
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }}>
                     <div style={{ ...styles.flex1, ...styles.alignCenter }}>
                         <span style={{ ...regularFont }}>Date Updated: {this.getDateUpdated()}</span>
                     </div>
@@ -599,7 +608,7 @@ function mapStateToProps(state) {
     return {
         myuser: state.myuser,
         projects: state.projects,
-        gfk:state.gfk
+        gfk: state.gfk
     }
 }
 export default connect(mapStateToProps, actions)(ViewProposal)

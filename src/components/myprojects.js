@@ -219,30 +219,36 @@ class MyProjects extends Component {
     async deleteProject(client_id, projectid) {
         const geotech = new Geotech();
 
-        try {
-            const result = await DeleteProject(client_id, projectid);
+        const getproject = geotech.getProjectByID.call(this,projectid)
 
-            if (!result.success) {
-                alert(result.Error || "Could not delete project");
-                return;
+        if (window.confirm(`Are you sure you want to delete ${getproject.title}?`)) {
+
+            try {
+                const result = await DeleteProject(client_id, projectid);
+
+                if (!result.success) {
+                    alert(result.Error || "Could not delete project");
+                    return;
+                }
+
+                const projects = geotech.getProjects.call(this) || [];
+
+                const updatedProjects = projects.filter(
+                    project => project.projectid !== projectid
+                );
+
+                this.props.reduxProjects(updatedProjects);
+
+                this.setState({
+                    activeprojectid: null
+                });
+
+            } catch (err) {
+                console.error(err);
+                alert(`Could not delete project: ${err.message}`);
             }
 
-            const projects = geotech.getProjects.call(this) || [];
-
-            const updatedProjects = projects.filter(
-                project => project.projectid !== projectid
-            );
-
-            this.props.reduxProjects(updatedProjects);
-
-            this.setState({
-                activeprojectid: null
-            });
-
-        } catch (err) {
-            console.error(err);
-            alert(`Could not delete project: ${err.message}`);
-        }
+        } // end confirm
     }
 
     async saveprojects() {

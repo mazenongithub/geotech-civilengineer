@@ -64,29 +64,42 @@ class ViewProject extends Component {
                     ? JSON.parse(evt.data)
                     : evt.data;
 
-                const { type, updatedSchedule } = message;
+                const { type, updatedSchedule, updatedtimesheet } = message;
+                const projects = geotech.getProjects.call(this);
+                const project = geotech.getProjectByID.call(this, projectid);
+                if (!project) {
+                    return;
+                }
+
+                const i = geotech.getProjectKeyByID.call(this, projectid);
+
+                if (i === -1 || !projects[i]) {
+                    return;
+                }
+
 
                 switch (type) {
 
                     case "updatedschedule-gfk": {
 
-                        const projects = geotech.getProjects.call(this);
-                        const project = geotech.getProjectByID.call(this, projectid);
-
-                        if (!project) {
-                            return;
-                        }
-
-                        const i = geotech.getProjectKeyByID.call(this, projectid);
-
-                        if (i === -1 || !projects[i]) {
-                            return;
-                        }
 
                         projects[i].schedule.costs = updatedSchedule.costs;
                         projects[i].schedule.labor = updatedSchedule.labor;
                         projects[i].schedule.proposals = updatedSchedule.proposals;
 
+                        this.props.reduxProjects(projects);
+
+                        this.setState({
+                            render: 'render'
+                        });
+
+                        break;
+                    }
+
+                    case "updatedtimesheet-gfk": {
+                        projects[i].timesheet.costs = updatedtimesheet.costs;
+                        projects[i].timesheet.labor = updatedtimesheet.labor;
+                        
                         this.props.reduxProjects(projects);
 
                         this.setState({

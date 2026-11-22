@@ -21,6 +21,24 @@ export function advanceIcon() {
 </svg>)
 }
 
+
+export function plusIcon() {
+    return(<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32.86 32.86">
+  <g id="svg">
+    <polygon className="plusminusicon-1" points="32.61 9.69 32.61 23.18 23.17 23.18 23.17 32.61 9.69 32.61 9.69 23.18 .25 23.18 .25 9.69 9.69 9.69 9.69 .25 23.17 .25 23.17 9.69 32.61 9.69"/>
+  </g>
+</svg>)
+}
+
+export function minusIcon() {
+    return(<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33.94 13.7">
+
+  <g id="svg">
+    <rect className="plusminusicon-1" x=".25" y=".25" width="33.44" height="13.2"/>
+  </g>
+</svg>)
+}
+
 export function logMeIn() {
   return(
 <svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172.13 80.06">

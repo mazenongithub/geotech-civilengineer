@@ -7,6 +7,31 @@ class Geotech {
         return myuser?._id ? myuser : null;
     }
 
+    getCompactionTestbyProjectID(projectid) {
+        const geotech = new Geotech();
+
+        const project = geotech.getProjectByID.call(this, projectid);
+
+        if (!project) {
+            return [];
+        }
+
+        return (project.fieldreports || []).flatMap(fieldreport =>
+            Array.isArray(fieldreport.compactiontests)
+                ? fieldreport.compactiontests
+                : []
+        );
+    }
+
+
+    getReportsByProject(projectid) {
+        const geotech = new Geotech()
+
+        const project = geotech.getProjectByID.call(this, projectid)
+
+        return project?.reports || [];
+    }
+
     getProjects() {
         let { projects } = this.props;
 
@@ -53,6 +78,24 @@ class Geotech {
         }
     }
 
+    getReportByID(projectid, reportid) {
+        const geotech = new Geotech();
+        const project = geotech.getProjectByID.call(this, projectid);
+
+        const reports = project?.reports || [];
+
+        return reports.find(report => report.reportid === reportid) || null;
+    }
+
+    getScheduleByProjectID(projectid) {
+        const geotech = new Geotech();
+
+        // You accidentally wrote "this.projectid" instead of passing the argument
+        const project = geotech.getProjectByID.call(this, projectid);
+
+        return project?.schedule || false;
+    }
+
     getProposals(projectid) {
         const geotech = new Geotech();
         const project = geotech.getProjectByID.call(this, projectid);
@@ -60,6 +103,35 @@ class Geotech {
             return project.schedule?.proposals ?? [];
 
         }
+    }
+
+    getProjectTables(projectid) {
+        const geotech = new Geotech();
+        const project = geotech.getProjectByID.call(this, projectid)
+
+        return Array.isArray(project?.tables)
+            ? project.tables
+            : [];
+    }
+
+
+    getFiguresByProjectID(projectid) {
+        if (!projectid) return [];
+
+        const geotech = new Geotech();
+
+        const project = geotech.getProjectByID.call(this, projectid);
+
+        return Array.isArray(project?.figures)
+            ? project.figures
+            : [];
+    }
+
+    getTableByID(projectid, tableid) {
+        const geotech = new Geotech();
+        return geotech.getProjectTables.call(this, projectid).find(
+            table => table.tableid === tableid
+        ) || null;
     }
 
     getInvoiceByID(projectid, invoiceid) {
@@ -108,6 +180,19 @@ class Geotech {
             canDelete: populatedProperties.length === 0,
             populatedProperties
         };
+    }
+
+    getSDC(projectid) {
+
+        const projects = this.props.projects;
+
+        if (!Array.isArray(projects)) return false;
+
+        const project = projects.find(
+            project => project.projectid === projectid
+        );
+
+        return project?.SDC ?? false;
     }
 
     getInvoiceLineItems(projectid, invoiceid) {

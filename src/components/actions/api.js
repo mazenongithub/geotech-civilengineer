@@ -1,7 +1,7 @@
 export async function LoginConfirmation(updatedParams) {
     const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/${updatedParams.emailaddress}/login`;
 
-     try {
+    try {
 
         const response = await fetch(APIURL, {
             method: "GET",
@@ -32,7 +32,7 @@ export async function LoginConfirmation(updatedParams) {
 }
 
 export async function DownloadProposal(projectid, proposalid) {
-   
+
     const APIURL = `${process.env.REACT_APP_SERVER_API}/gfk/xml/${projectid}/proposal/${proposalid}`;
 
     try {
@@ -61,7 +61,7 @@ export async function DownloadProposal(projectid, proposalid) {
 }
 
 export async function DownloadfieldReport(projectid, fieldid) {
-     const APIURL = `${process.env.REACT_APP_SERVER_API}/gfk/xml/${projectid}/fieldreport/${fieldid}`;
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/gfk/xml/${projectid}/fieldreport/${fieldid}`;
 
     try {
         const resp = await fetch(APIURL, { credentials: 'include' });
@@ -213,7 +213,7 @@ export async function LogoutUser(clientid) {
 
 export async function CreateClient(values) {
 
-        const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/createclient`;
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/createclient`;
 
     try {
         const response = await fetch(APIURL, {
@@ -244,7 +244,7 @@ export async function CreateClient(values) {
 
 export async function RegisterNewClient(values) {
 
-        const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/registernewclient`;
+    const APIURL = `${process.env.REACT_APP_SERVER_API}/geotech/registernewclient`;
 
     try {
         const response = await fetch(APIURL, {
@@ -414,6 +414,119 @@ export async function LoadProjects() {
         throw err;
     }
 }
+
+
+export async function DownLoadFigure(projectid, figureid) {
+
+    const baseURL =
+        process.env.REACT_APP_SERVER_API.replace(/\/+$/, '');
+
+    const APIURL =
+        `${baseURL}/gfk/${encodeURIComponent(projectid)}/figures/${encodeURIComponent(figureid)}/reportxml`;
+
+    try {
+        const resp = await fetch(APIURL, {
+            method: 'GET',
+            credentials: 'include'
+        });
+
+        if (!resp.ok) {
+            const errorData = await resp.json().catch(() => null);
+
+            throw new Error(
+                errorData?.Error ||
+                errorData?.message ||
+                `Failed to download figure. HTTP ${resp.status}`
+            );
+        }
+
+        const contentType =
+            resp.headers.get('content-type') || '';
+
+        if (!contentType.toLowerCase().includes('application/pdf')) {
+            throw new Error(
+                `Expected PDF but received ${contentType || 'unknown content type'}`
+            );
+        }
+
+        return await resp.blob();
+
+    } catch (err) {
+        console.error('Error downloading figure:', err);
+        throw err;
+    }
+}
+
+
+
+export async function DownLoadBoring(projectid, boringid) {
+
+
+
+    const baseURL = process.env.REACT_APP_SERVER_API.replace(/\/+$/, '');
+
+    const APIURL =
+        `${baseURL}/gfk/xml/${encodeURIComponent(projectid)}/boring/${encodeURIComponent(boringid)}`;
+
+    try {
+        const resp = await fetch(APIURL, {
+            credentials: 'include'
+        });
+
+        if (!resp.ok) {
+            const errorData = await resp.json().catch(() => null);
+
+            throw new Error(
+                errorData?.message ||
+                `Failed to download report. HTTP ${resp.status}`
+            );
+        }
+
+        return await resp.blob();
+
+    } catch (err) {
+        console.error('Error downloading report:', err);
+        throw err;
+    }
+}
+
+
+
+export async function DownLoadReport(projectid, reportid, type) {
+
+    const endpoint =
+        type === 'Geotechnical Investigation Report'
+            ? 'report'
+            : 'reportletter';
+
+    const baseURL = process.env.REACT_APP_SERVER_API.replace(/\/+$/, '');
+
+    const APIURL =
+        `${baseURL}/gfk/xml/${encodeURIComponent(projectid)}/${endpoint}/${encodeURIComponent(reportid)}`;
+
+    try {
+        const resp = await fetch(APIURL, {
+            credentials: 'include'
+        });
+
+        if (!resp.ok) {
+            const errorData = await resp.json().catch(() => null);
+
+            throw new Error(
+                errorData?.message ||
+                `Failed to download report. HTTP ${resp.status}`
+            );
+        }
+
+        return await resp.blob();
+
+    } catch (err) {
+        console.error('Error downloading report:', err);
+        throw err;
+    }
+}
+
+
 
 export async function GetSummary(projectid) {
     const APIURL = `${process.env.REACT_APP_SERVER_API}/gfk/xml/${projectid}/labsummary`;

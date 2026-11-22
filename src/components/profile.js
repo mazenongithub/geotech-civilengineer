@@ -27,7 +27,7 @@ class Profile extends Component {
     }
 
     getValue(prop) {
-     
+
         const geotech = new Geotech();
         const user = geotech.getUser.call(this);
 
@@ -252,7 +252,7 @@ class Profile extends Component {
     }
 
     validateProfile(myuser) {
-      
+
         const errors = [];
 
         // Client ID (Instagram-style username)
@@ -292,7 +292,7 @@ class Profile extends Component {
             const geotech = new Geotech();
             const user = geotech.getUser.call(this)
 
-           const errors =  this.validateProfile(user)
+            const errors = this.validateProfile(user)
 
             if (errors.length) {
                 alert(errors.join("\n"));
@@ -372,88 +372,95 @@ class Profile extends Component {
         const geotech = new Geotech();
         const regularFont = geotech.getRegularFont.call(this)
         const myuser = geotech.getUser.call(this)
-        if(myuser) {
-        return (<div style={{ ...styles.width90marginAuto, ...styles.generalContainer }}>
+        if (myuser) {
+            return (<div style={{ ...styles.width90marginAuto, ...styles.generalContainer }}>
 
-            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15, ...styles.alignCenter }}>
-              <span style={{ ...regularFont }}>ClientID/</span>  <input type="text" style={{ ...regularFont, ...styles.width50 }}
-                    value={this.getValue('clientid')}
-                    onChange={event => { this.setValue("clientid", event.target.value) }} />
-               
-
-
-            </div>
-
-            
-
-            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.generalFont}}>
-                {this.getProfilePhoto()}
-               
-            </div>
-            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.generalFont}}>
-                <span style={{...regularFont}}>Profile URL: {myuser.profileurl}</span>
-            </div>
+                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15, ...styles.alignCenter }}>
+                    <span style={{ ...regularFont }}>ClientID/</span>  <input type="text" style={{ ...regularFont, ...styles.width50 }}
+                        value={this.getValue('clientid')}
+                        onChange={event => { this.setValue("clientid", event.target.value) }} />
 
 
 
-            <div style={{ ...styles.generalContainer, ...styles.positionRight, ...uploadIconMargin }}>
-
-                <button className={`generalButton`} onClick={() => document.getElementById("profilephoto").click()}
-                    style={{  ...uploadContainer }}>{uploadIcon()}</button>
-
-
-                <span style={{ ...regularFont }}>Upload Profile Image</span>
-                <input type="file"
-                    onChange={() => { this.uploadProfilePicture() }}
-                    id="profilephoto" style={{ ...styles.noDisplay }} />
-
-            </div>
+                </div>
 
 
 
-            <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
-                <span style={{ ...regularFont }}><u>Profile Information</u></span>
-            </div>
-
-            {this.profile_1()}
-
-            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                <input type="text" style={{ ...regularFont, ...styles.generalField }}
-                    value={this.getValue('company')}
-                    onChange={event => { this.setValue("company", event.target.value) }} />
-                <span style={{ ...regularFont }}>Company</span>
-
-            </div>
-
-            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                <input type="text" style={{ ...regularFont, ...styles.generalField }}
-                    value={this.getValue('address')}
-                    onChange={event => { this.setValue("address", event.target.value) }} />
-                <span style={{ ...regularFont }}>Address</span>
-
-            </div>
-
-            {this.profile_2()}
-
-            {this.profile_3()}
-
-            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.generalFont }}>
-                <span style={{ ...regularFont }}>{this.state.message} </span>
-            </div>
-
-
-            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                <button className={`generalButton`} style={{ ...saveprofile }} onClick={() => { this.saveProfile() }}>{saveProfileIcon()}</button>
-            </div>
+                <div style={{
+                    ...styles.generalContainer,
+                    ...styles.bottomMargin15,
+                    ...styles.generalFont,
+                    display: 'flex',
+                    justifyContent: 'center'
+                }}>
+                    <div style={{ width: '12em' }}>
+                        {this.getProfilePhoto()}
+                    </div>
+                </div>
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.generalFont }}>
+                    <span style={{ ...regularFont }}>Profile URL: {myuser.profileurl}</span>
+                </div>
 
 
 
-        </div>)
+                <div style={{ ...styles.generalContainer, ...styles.positionRight, ...uploadIconMargin }}>
+
+                    <button className={`generalButton`} onClick={() => document.getElementById("profilephoto").click()}
+                        style={{ ...uploadContainer }}>{uploadIcon()}</button>
+
+
+                    <span style={{ ...regularFont }}>Upload Profile Image</span>
+                    <input type="file"
+                        onChange={() => { this.uploadProfilePicture() }}
+                        id="profilephoto" style={{ ...styles.noDisplay }} />
+
+                </div>
+
+
+
+                <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
+                    <span style={{ ...regularFont }}><u>Profile Information</u></span>
+                </div>
+
+                {this.profile_1()}
+
+                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                    <input type="text" style={{ ...regularFont, ...styles.generalField }}
+                        value={this.getValue('company')}
+                        onChange={event => { this.setValue("company", event.target.value) }} />
+                    <span style={{ ...regularFont }}>Company</span>
+
+                </div>
+
+                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                    <input type="text" style={{ ...regularFont, ...styles.generalField }}
+                        value={this.getValue('address')}
+                        onChange={event => { this.setValue("address", event.target.value) }} />
+                    <span style={{ ...regularFont }}>Address</span>
+
+                </div>
+
+                {this.profile_2()}
+
+                {this.profile_3()}
+
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.generalFont }}>
+                    <span style={{ ...regularFont }}>{this.state.message} </span>
+                </div>
+
+
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <button className={`generalButton`} style={{ ...saveprofile }} onClick={() => { this.saveProfile() }}>{saveProfileIcon()}</button>
+                </div>
+
+
+
+            </div>)
 
 
         } else {
 
-              <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.generalFont }}>
+            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.generalFont }}>
                 <span style={{ ...regularFont }}>No User </span>
             </div>
 

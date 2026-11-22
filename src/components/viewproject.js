@@ -17,6 +17,10 @@ import ViewInvoice from './viewinvoice'
 import Payments from './payments'
 import Proposals from './proposals'
 import ViewProposal from './viewproposal'
+import Reports from './reports';
+import ViewReport from './viewreport';
+import Figures from './figures';
+import ViewFigure from './viewfigure'
 
 class ViewProject extends Component {
 
@@ -99,7 +103,7 @@ class ViewProject extends Component {
                     case "updatedtimesheet-gfk": {
                         projects[i].timesheet.costs = updatedtimesheet.costs;
                         projects[i].timesheet.labor = updatedtimesheet.labor;
-                        
+
                         this.props.reduxProjects(projects);
 
                         this.setState({
@@ -198,7 +202,11 @@ class ViewProject extends Component {
                 ptslab: result.ptslab,
                 slope: result.slope,
                 timesheet: result.timesheet,
-                schedule: result.schedule
+                schedule: result.schedule,
+                reports: result.reports,
+                SDC: result.SDC,
+                figures: result.figures,
+                tables: result.tables
             };
 
             // Update Redux store or local state
@@ -451,40 +459,38 @@ class ViewProject extends Component {
 
                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/borings`}>/Soil Borings Logs</Link>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/reports`}>/Reports</Link>
+
                         </div>
                         <div style={{ ...styles.flex1 }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/reports`}>/Technical Reports</Link>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/borings`}>/Soil Borings</Link>
                         </div>
                     </div>
 
 
                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/documents`}>/Documents </Link>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/figures`}>/Figures</Link>
                         </div>
                         <div style={{ ...styles.flex1 }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/labsummary`}>/Soil Lab </Link>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/labsummary`}>/Lab Summary </Link>
+                        </div>
+                        <div style={{ ...styles.flex1 }}>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/fieldreports`}>/Field Reports</Link>
                         </div>
                     </div>
 
+             
                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/maps`}>/Geology</Link>
-                        </div>
-                        <div style={{ ...styles.flex1 }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/fieldreports`}>/Site Reports</Link>
-                        </div>
-                    </div>
-
-                    <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/proposals`}>/Proposals (Schedule)</Link>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/proposals`}>/Schedule</Link>
                         </div>
                         <div style={{ ...styles.flex1 }}>
                             <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/Invoices`}>/Invoices</Link>
                         </div>
                     </div>
+
+
 
 
 
@@ -508,46 +514,104 @@ class ViewProject extends Component {
         const path = match.path;
         const projectid = this.props.match.params.projectid;
         const user = geotech.getUser.call(this)
-        const project = geotech.getProjectByID.call(this, projectid);
 
 
-        if (!user || !project) {
-            return <div style={styles.generalContainer}>Loading...</div>;
+
+
+
+        if (user) {
+
+            const project = geotech.getProjectByID.call(this, projectid);
+            if (project) {
+                return (<div style={{ ...styles.generalContainer }}>
+                    <Switch>
+                        <Route exact path={path} render={() => this.showViewProject()} />
+                        <Route exact path={`${path}/borings`} component={Borings} />
+                        <Route exact path={`${path}/labsummary`} component={LabSummary} />
+                        <Route exact path={`${path}/fieldreports`} component={FieldReports} />
+                        <Route exact path={`${path}/borings/:boringid`} component={ViewBoring} />
+                        <Route exact path={`${path}/fieldreports/:fieldid`} component={ViewFieldReport} />
+                        <Route exact path={`${path}/invoices`} component={Invoices} />
+                        <Route exact path={`${path}/proposals`} component={Proposals} />
+                        <Route
+                            exact
+                            path={`${path}/figures`}
+                            render={(props) => (
+                                <Figures
+                                    {...props}
+                                    socket={this.socket}
+                                />
+                            )}
+                        />
+                        <Route
+                            exact
+                            path={`${path}/reports`}
+                            render={(props) => (
+                                <Reports
+                                    {...props}
+                                    socket={this.socket}
+                                />
+                            )}
+                        />
+
+                        <Route
+                            exact
+                            path={`${path}/reports/:reportid`}
+                            render={(props) => (
+                                <ViewReport
+                                    {...props}
+                                    socket={this.socket}
+                                />
+                            )}
+                        />
+
+                        <Route
+                            exact
+                            path={`${path}/figures/:figureid`}
+                            render={(props) => (
+                                <ViewFigure
+                                    {...props}
+                                    socket={this.socket}
+                                />
+                            )}
+                        />
+
+                        <Route
+                            exact
+                            path={`${path}/invoices/:invoiceid`}
+                            render={(props) => (
+                                <ViewInvoice
+                                    {...props}
+                                    socket={this.socket}
+                                />
+                            )}
+                        />
+                        <Route
+                            exact
+                            path={`${path}/proposals/:proposalid`}
+                            render={(props) => (
+                                <ViewProposal
+                                    {...props}
+                                    socket={this.socket}
+                                />
+                            )}
+                        />
+                        <Route exact path={`${path}/invoices/:invoiceid/payments`} component={Payments} />
+
+                    </Switch>
+                </div>)
+
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...styles.alignCenter }}> Project Missing  </div>)
+            }
+
+        } else {
+
+            return (<div style={{ ...styles.generalContainer, ...styles.alignCenter }}> User Missing  </div>)
+
+
+
         }
-        return (<div style={{ ...styles.generalContainer }}>
-            <Switch>
-                <Route exact path={path} render={() => this.showViewProject()} />
-                <Route exact path={`${path}/borings`} component={Borings} />
-                <Route exact path={`${path}/labsummary`} component={LabSummary} />
-                <Route exact path={`${path}/fieldreports`} component={FieldReports} />
-                <Route exact path={`${path}/borings/:boringid`} component={ViewBoring} />
-                <Route exact path={`${path}/fieldreports/:fieldid`} component={ViewFieldReport} />
-                <Route exact path={`${path}/invoices`} component={Invoices} />
-                <Route exact path={`${path}/proposals`} component={Proposals} />
-                <Route
-                    exact
-                    path={`${path}/invoices/:invoiceid`}
-                    render={(props) => (
-                        <ViewInvoice
-                            {...props}
-                            socket={this.socket}
-                        />
-                    )}
-                />
-                <Route
-                    exact
-                    path={`${path}/proposals/:proposalid`}
-                    render={(props) => (
-                        <ViewProposal
-                            {...props}
-                            socket={this.socket}
-                        />
-                    )}
-                />
-                <Route exact path={`${path}/invoices/:invoiceid/payments`} component={Payments} />
-
-            </Switch>
-        </div>)
 
 
     }

@@ -20,6 +20,13 @@ body {
 
 }
 
+.plusminusicon-1 {
+  fill: #94aeda;
+  stroke: #231f20;
+  stroke-miterlimit: 10;
+  stroke-width: .5px;
+}
+
 /* Group nav + hamburger */
 .top-controls {
   display: flex;

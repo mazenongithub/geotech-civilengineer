@@ -6,7 +6,7 @@ import Geotech from './geotech';
 import { Link } from 'react-router-dom';
 import { calcdryden, moist } from './functions';
 import UnconfinedCalcs from './unconfinedcalcs';
-import SoilClassification from './soilclassification';
+import SoilClassification from './soilclassification.js';
 import { GetSummary } from './actions/api';
 import { clickToDownload } from './svg';
 

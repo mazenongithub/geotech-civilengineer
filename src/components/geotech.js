@@ -1,5 +1,4 @@
-import { SaveProjects } from "./actions/api";
-import { geotechLogo } from "./svg";
+
 class Geotech {
 
     getUser() {
@@ -24,13 +23,17 @@ class Geotech {
     }
 
 
-    getReportsByProject(projectid) {
-        const geotech = new Geotech()
+   
+getReportsByProject(projectid) {
+    const geotech = new Geotech();
 
-        const project = geotech.getProjectByID.call(this, projectid)
+    const project = geotech.getProjectByID.call(this, projectid);
 
-        return project?.reports || [];
-    }
+    return [...(project?.reports || [])].sort((a, b) => {
+        return new Date(b.datereport) - new Date(a.datereport);
+    });
+}
+
 
     getProjects() {
         let { projects } = this.props;

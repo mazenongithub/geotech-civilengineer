@@ -40,7 +40,6 @@ class ViewReport extends Component {
     showCompactionTable(section) {
 
         const geotech = new Geotech();
-        const { referenceid, sectionid } = section;
         const styles = MyStylesheet();
         const regularFont = geotech.getRegularFont.call(this);
         const { projectid } = this.props.match.params;
@@ -957,9 +956,6 @@ class ViewReport extends Component {
         const geotech = new Geotech();
         const user = geotech.getUser.call(this)
 
-
-
-        const project = encodeURIComponent(projectid);
         const referenceid = encodeURIComponent(section.referenceid || '');
 
         switch (section.type) {
@@ -1052,7 +1048,6 @@ class ViewReport extends Component {
 
         const styles = MyStylesheet();
         const geotech = new Geotech();
-        const headerFont = geotech.getHeaderFont.call(this)
         const regularFont = geotech.getRegularFont.call(this)
         const user = geotech.getUser.call(this)
         const { projectid, reportid } = this.props.match.params
@@ -1070,7 +1065,7 @@ class ViewReport extends Component {
             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
 
 
-                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
 
                     <Link
                         style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink, ...styles.boldFont }}

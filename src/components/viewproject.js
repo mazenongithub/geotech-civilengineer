@@ -339,7 +339,7 @@ class ViewProject extends Component {
 
         const geotech = new Geotech();
         const user = geotech.getUser.call(this)
-        const path = this.props.match.path;
+
         const headerFont = geotech.getHeaderFont.call(this)
         const regularFont = geotech.getRegularFont.call(this)
         const saveIconWidth = this.state.width > 768 ? { width: '200px' } : { width: '150px' }
@@ -483,7 +483,7 @@ class ViewProject extends Component {
              
                     <div style={{ ...styles.generalFlex, ...styles.generalFont, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/proposals`}>/Schedule</Link>
+                            <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/proposals`}>/Proposals</Link>
                         </div>
                         <div style={{ ...styles.flex1 }}>
                             <Link style={{ ...styles.generalLink, ...headerFont }} to={`/projects/${clientid}/${projectid}/Invoices`}>/Invoices</Link>
@@ -523,7 +523,7 @@ class ViewProject extends Component {
 
             const project = geotech.getProjectByID.call(this, projectid);
             if (project) {
-                return (<div style={{ ...styles.generalContainer }}>
+                return (<div style={{ ...styles.generalContainer, ...styles.padding10 }}>
                     <Switch>
                         <Route exact path={path} render={() => this.showViewProject()} />
                         <Route exact path={`${path}/borings`} component={Borings} />

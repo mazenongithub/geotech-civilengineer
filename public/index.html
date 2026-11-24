@@ -2,20 +2,16 @@
 <html lang="en">
 
 <head>
-  <script
-    src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-    async
-    defer
-></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
   <meta charset="utf-8" />
   <link rel="icon" href="%PUBLIC_URL%/geotechicon32.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#eee9e1" />
   <meta name="description"
-    content="Geotech is a secure platform for managing geotechnical projects in California. Track inspections, access soil and foundation reports, and collaborate with your geotechnical engineer in one place." />
+    content="Geotech by CivilEngineer.io helps you manage geotechnical projects in California. Track inspections, review soil testing, and access engineering reports." />
   <!-- Search & indexing -->
   <meta name="keywords"
-    content="geotechnical project manager, geotechnical project management, geotechnical engineering software, geotechnical engineering, geotechnical reports, soil testing, field investigations, civil engineering project management" />
+    content="geotechnical engineering, geotechnical project management, geotechnical engineering software, geotechnical reports, soil testing, soil laboratory testing, boring logs, field inspections, compaction testing, foundation inspections, geotechnical investigations, construction testing, civil engineering project management, California geotechnical engineering, CivilEngineer.io" />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Mazin Kenicer, Civil Engineer" />
 
@@ -24,25 +20,30 @@
   <meta property="og:site_name" content="geotech.civilengineer.io" />
   <meta property="og:title" content="Geotech | Geotechnical Project Management" />
   <meta property="og:description"
-    content="Manage geotechnical inspections, reports, and project communication across California—all in one secure dashboard." />
+    content="Geotech by CivilEngineer.io helps you manage geotechnical projects in California. Track inspections, review soil testing, and access engineering reports." />
   <meta property="og:url" content="https://geotech.civilengineer.io" />
-  <meta property="og:image" content="%PUBLIC_URL%/geotech1200_600.png" />
+  <meta property="og:image" content="%PUBLIC_URL%/geotech1200_600.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="600" />
-  <meta property="og:image:alt" content="CivilEngineer.io Geotechnical Project Manager" />
+  <meta property="og:image:alt"
+    content="Geotech by CivilEngineer.io – Geotechnical Engineering Project Portal featuring soil profiles, boring samples, and foundation engineering" />
   <meta property="og:locale" content="en_US" />
 
   <!-- Twitter Cards -->
- 
+
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> <!-- Structured Data -->
 
   <meta name="twitter:image:alt" content="CivilEngineer.io Geotechnical Project Manager" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Geotech | Geotechnical Project Management" />
   <meta name="twitter:description"
-    content="A modern platform for California geotechnical projects—track inspections, reports, and approvals with ease." />
-  <meta name="twitter:image" content="%PUBLIC_URL%/geotech1200_600.png" />
-  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    content="Geotech by CivilEngineer.io helps you manage geotechnical projects in California. Track inspections, review soil testing, and access engineering reports." />
+  <meta name="twitter:image" content="%PUBLIC_URL%/geotech1200_600.jpg" />
+  <link
+    rel="apple-touch-icon"
+    sizes="180x180"
+    href="%PUBLIC_URL%/geotechicon180.png"
+/>
   <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -62,48 +63,60 @@
 
 
 
-    <!-- Social Sharing / X -->
+  <!-- Social Sharing / X -->
 
 
-    <script type="application/ld+json">
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Geotechnical Project Manager",
+  "@type": "WebApplication",
+  "@id": "https://geotech.civilengineer.io/#application",
+
+  "name": "Geotech | CivilEngineer.io",
+  "alternateName": "Geotechnical Project Manager",
+
   "url": "https://geotech.civilengineer.io/",
+
   "applicationCategory": "BusinessApplication",
   "applicationSubCategory": "Geotechnical Engineering Project Management",
+
   "operatingSystem": "Web",
-  "description": "Geotechnical Project Manager by CivilEngineer.io is a web-based project management application for managing geotechnical engineering projects, field investigations, soil testing, engineering reports, proposals, schedules, invoices, and client deliverables.",
+  "browserRequirements": "Requires a modern web browser",
+
+  "description": "Geotech by CivilEngineer.io is a web-based platform for managing geotechnical engineering projects in California. Manage field investigations, soil testing, construction inspections, engineering reports, proposals, schedules, invoices, and client deliverables.",
+
+  "image": "https://geotech.civilengineer.io/geotech-og-1200x600.jpg",
+
   "creator": {
     "@type": "Organization",
+    "@id": "https://civilengineer.io/#organization",
     "name": "CivilEngineer.io",
-    "url": "https://civilengineer.io/"
+    "url": "https://civilengineer.io/",
+
+    "founder": {
+      "@type": "Person",
+      "name": "Mazin Kenicer",
+      "jobTitle": "Civil Engineer",
+      "honorificSuffix": "P.E."
+    }
   },
-  "founder": {
-    "@type": "Person",
-    "name": "Mazin Kenicer",
-    "jobTitle": "Civil Engineer",
-    "honorificSuffix": "P.E."
-  },
+
   "featureList": [
     "Geotechnical project management",
-    "Project management",
     "Field investigation management",
-    "Boring logs",
+    "Soil boring logs",
     "Soil laboratory testing",
-    "Geotechnical engineering reports",
-    "Field reports",
-    "Proposals and scheduling",
+    "Field compaction testing",
+    "Construction inspections",
+    "Geotechnical investigation reports",
+    "Engineering report management",
+    "Project proposals and approvals",
+    "Project scheduling",
     "Project invoicing",
-    "Client project management",
+    "Client project coordination",
     "Engineering document management",
     "Construction project support"
-  ],
-  "areaServed": {
-    "@type": "State",
-    "name": "California"
-  }
+  ]
 }
 </script>
 </head>
